@@ -3,7 +3,13 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start:debug": "nx serve server --watch"
+    "start": "dotenv -e env/local.env -- nx serve server",
+    "prisma:generate": "npx prisma generate",
+    "migrate": "dotenv -e env/local.env -- prisma migrate dev --preview-feature",
+    "migrate:create": "dotenv -e env/local.env -- prisma migrate dev --create-only --preview-feature",
+    "migrate:deploy": "dotenv -e env/local.env -- prisma migrate deploy --preview-feature",
+    "migrate:pull": "dotenv -e env/local.env -- prisma db pull",
+    "migrate:reset": "dotenv -e env/local.env -- prisma migrate reset --preview-feature"
   },
   "private": true,
   "dependencies": {
@@ -17,6 +23,7 @@
     "@angular/router": "~16.0.0",
     "@nestjs/common": "^9.1.1",
     "@nestjs/core": "^9.1.1",
+    "@nestjs/jwt": "^10.1.0",
     "@nestjs/platform-express": "^9.1.1",
     "@nestjs/swagger": "^7.0.3",
     "@nrwl/angular": "^16.3.2",
@@ -29,6 +36,7 @@
     "dotenv": "^16.3.1",
     "dotenv-cli": "^7.2.1",
     "helmet": "^7.0.0",
+    "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
     "tslib": "^2.3.0",
@@ -60,6 +68,7 @@
     "@schematics/angular": "~16.0.0",
     "@types/jest": "^29.4.0",
     "@types/node": "~18.7.1",
+    "@types/passport-jwt": "^3.0.8",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
     "cypress": "^12.11.0",
