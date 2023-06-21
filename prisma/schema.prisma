@@ -9,3 +9,47 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Customer {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String
+  phoneNumber String
+  password    String
+  createdAt   DateTime     @default(now())
+  translations Translation[]
+  roles Role[]
+}
+
+model Page {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  translations Translation[]
+}
+
+model Translation {
+  id          Int          @id @default(autoincrement())
+  english     String
+  turkish     String
+  german      String
+  russian     String
+  customerId  Int
+  customer    Customer     @relation(fields: [customerId], references: [id])
+  pageId      Int
+  page        Page         @relation(fields: [pageId], references: [id])
+}
+
+model Permission {
+  id     Int    @id @default(autoincrement())
+  name   String
+  roleId Int
+  role   Role   @relation(fields: [roleId], references: [id])
+}
+
+model Role {
+  id     Int    @id @default(autoincrement())
+  name   String
+  customerId Int
+  customer Customer @relation(fields: [customerId], references: [id])
+  permissions Permission[]
+}
