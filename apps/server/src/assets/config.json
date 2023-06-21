@@ -9,5 +9,6 @@
     "REFRESH_EXPIRED_ON": "7d"
   },
   "I18N_LANG": "en",
-  "I18N_JSON_PATH": "/assets/i18n/"
+  "I18N_JSON_PATH": "/assets/i18n/",
+  "SWAGGER_PREFIX": "api/swagger"
 }

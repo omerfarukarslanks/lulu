@@ -10,6 +10,7 @@ export interface ServiceConfiguration {
   I18N_LANG?: string;
   I18N_JSON_PATH?: string;
   PROTOCOL?: string;
+  SWAGGER_PREFIX?: string;
 }
 
 export interface AuthConfig {
