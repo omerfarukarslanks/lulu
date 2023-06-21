@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@translations-config/model": ["libs/model/src/index.ts"],
+      "@translations-config/service": ["libs/service/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

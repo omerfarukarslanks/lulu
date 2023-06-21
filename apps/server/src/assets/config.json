@@ -1,0 +1,13 @@
+{
+  "HTTP_PORT": 9090,
+  "GLOBAL_API_PREFIX": "api/translation-service",
+  "REVERSE_CONTEXT": "translation",
+  "AUTH": {
+    "SECRET": "iot_secret_auth",
+    "EXPIRED_ON": "1d",
+    "REFRESH_SECRET": "iot_secret_refresh",
+    "REFRESH_EXPIRED_ON": "7d"
+  },
+  "I18N_LANG": "en",
+  "I18N_JSON_PATH": "/assets/i18n/"
+}
