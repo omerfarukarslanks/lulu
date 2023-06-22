@@ -1,16 +1,16 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import {PrismaService} from "@translations-config/service";
+import {BcryptService, PrismaService} from "@translations-config/service";
 import {CustomerResponse} from "./response/customer-response";
 
 @Injectable()
 export class CustomerService {
 
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(private readonly prismaService: PrismaService, private bcryptService: BcryptService) {
   }
   async create(createCustomerDto: CreateCustomerDto) {
-    const isEmailAvailable = await this.isEmailAvailable(createCustomerDto.email);
+    const isEmailAvailable = await this.checkEmailUniqueness(createCustomerDto.email);
     if (isEmailAvailable)
       throw new BadRequestException(null, 'Email is available');
 
@@ -18,7 +18,7 @@ export class CustomerService {
       data: {
         name: createCustomerDto.name,
         email: createCustomerDto.email,
-        password: createCustomerDto.password,
+        password: await this.bcryptService.hash(createCustomerDto.password),
         phoneNumber: createCustomerDto.phoneNumber
       }
     });
@@ -27,21 +27,15 @@ export class CustomerService {
   }
 
   async findAll() {
-    return await this.prismaService.customer.findMany();
+    return  this.prismaService.customer.findMany();
   }
 
   async findOne(id: number) {
-    return this.prismaService.customer.findUnique({
+    const customer = await this.prismaService.customer.findUnique({
       where: {id}
     });
+    return CustomerResponse.fromUserEntity(customer);
   }
-
-  async findByEmail(email: string) {
-    return this.prismaService.customer.findUnique({
-      where: {email}
-    });
-  }
-
   update(id: number, updateCustomerDto: UpdateCustomerDto) {
     return `This action updates a #${id} customer`;
   }
@@ -50,10 +44,9 @@ export class CustomerService {
     return this.prismaService.customer.delete({where: {id}});
   }
 
-  isEmailAvailable(email: string) {
+  async checkEmailUniqueness(email: string) {
     return this.prismaService.customer.findUnique({
-      where: {email},
-      select: {email: true}
+      where: {email}
     })
   }
 }

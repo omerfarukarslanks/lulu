@@ -1,16 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete, UseGuards,
-} from '@nestjs/common';
-import { CustomerService } from './customer.service';
-import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
-import {AuthGuard} from "../auth/jwt-auth.guard";
+import {Body, Controller, Delete, Get, Param, Patch, Post, UseGuards,} from '@nestjs/common';
+import {CustomerService} from './customer.service';
+import {CreateCustomerDto} from './dto/create-customer.dto';
+import {UpdateCustomerDto} from './dto/update-customer.dto';
+import {AuthGuard} from "@translations-config/guard";
 
 @Controller('customer')
 export class CustomerController {
@@ -27,11 +19,13 @@ export class CustomerController {
     return this.customerService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.customerService.findOne(+id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -39,7 +33,7 @@ export class CustomerController {
   ) {
     return this.customerService.update(+id, updateCustomerDto);
   }
-
+  @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.customerService.remove(+id);
