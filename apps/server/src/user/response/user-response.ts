@@ -1,12 +1,12 @@
-import {Customer} from "../entities/customer.entity";
+import {User} from "../entities/user.entity";
 
-export class CustomerResponse {
+export class UserResponse {
   id: number;
   name: string;
   email: string
   phoneNumber: string;
-  static fromUserEntity(entity: Customer) {
-    const response = new CustomerResponse();
+  static fromUserEntity(entity: User) {
+    const response = new UserResponse();
     response.id = entity.id;
     response.name = entity.name
     response.email = entity.email;
