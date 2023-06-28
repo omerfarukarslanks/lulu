@@ -3,23 +3,33 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {BcryptService, PrismaService} from "@translations-config/service";
 import {UserResponse} from "./response/user-response";
+import {CompanyService} from "../company/company.service";
 
 @Injectable()
 export class UserService {
 
-  constructor(private readonly prismaService: PrismaService, private bcryptService: BcryptService) {
+  constructor(private readonly prismaService: PrismaService, private bcryptService: BcryptService, private companyService: CompanyService) {
   }
   async create(createUserDto: CreateUserDto) {
-    const isEmailAvailable = await this.checkEmailUniqueness(createUserDto.email);
-    if (isEmailAvailable)
-      throw new BadRequestException(null, 'Email is available');
+    const isEmailUnique = await this.checkEmailUniqueness(createUserDto.email);
+    if (isEmailUnique)
+      throw new BadRequestException(null, 'Email not unique');
+
+    const isCompanyAvailable = await this.companyService.findById(createUserDto.companyId);
+    if(!isCompanyAvailable)
+      throw new BadRequestException(null, 'Company is not found');
 
     const createUser = await this.prismaService.user.create({
       data: {
         name: createUserDto.name,
         email: createUserDto.email,
         password: await this.bcryptService.hash(createUserDto.password),
-        phoneNumber: createUserDto.phoneNumber
+        phoneNumber: createUserDto.phoneNumber,
+        company: {
+          connect: {
+            id: createUserDto.companyId
+          }
+        }
       }
     });
 

@@ -10,33 +10,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Company {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  user    User[]
+}
+
 model User {
-  id          Int          @id @default(autoincrement())
-  email       String       @unique
-  name        String
-  phoneNumber String
-  password    String
-  createdAt   DateTime     @default(now())
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  name         String
+  phoneNumber  String
+  password     String
+  createdAt    DateTime      @default(now())
+  companyId    Int
+  company      Company      @relation(fields: [companyId], references: [id])
   translations Translation[]
-  roles Role[]
+  roles        Role[]
 }
 
 model Page {
-  id          Int          @id @default(autoincrement())
-  name        String       @unique
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
   translations Translation[]
 }
 
 model Translation {
-  id          Int          @id @default(autoincrement())
-  english     String
-  turkish     String
-  german      String
-  russian     String
+  id      Int    @id @default(autoincrement())
+  english String
+  turkish String
+  german  String
+  russian String
   userId  Int
-  user    User     @relation(fields: [userId], references: [id])
-  pageId      Int
-  page        Page         @relation(fields: [pageId], references: [id])
+  user    User   @relation(fields: [userId], references: [id])
+  pageId  Int
+  page    Page   @relation(fields: [pageId], references: [id])
 }
 
 model Permission {
@@ -47,9 +57,9 @@ model Permission {
 }
 
 model Role {
-  id     Int    @id @default(autoincrement())
-  name   String
-  userId Int
-  user User @relation(fields: [userId], references: [id])
+  id          Int          @id @default(autoincrement())
+  name        String
+  userId      Int
+  user        User         @relation(fields: [userId], references: [id])
   permissions Permission[]
 }
