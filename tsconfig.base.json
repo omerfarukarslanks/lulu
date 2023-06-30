@@ -15,10 +15,10 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@translations-config/decorator": ["libs/decorator/src/index.ts"],
-      "@translations-config/guard": ["libs/guard/src/index.ts"],
-      "@translations-config/model": ["libs/model/src/index.ts"],
-      "@translations-config/service": ["libs/service/src/index.ts"]
+      "@lulu/decorator": ["libs/decorator/src/index.ts"],
+      "@lulu/guard": ["libs/guard/src/index.ts"],
+      "@lulu/model": ["libs/model/src/index.ts"],
+      "@lulu/service": ["libs/service/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

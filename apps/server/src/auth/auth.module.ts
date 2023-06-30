@@ -5,9 +5,9 @@ import {JwtModule} from "@nestjs/jwt";
 import {UserModule} from "../user/user.module";
 import {PassportModule} from "@nestjs/passport";
 import {UserService} from "../user/user.service";
-import {BcryptService, PrismaService} from "@translations-config/service";
-import {jwtConstants} from "@translations-config/model";
 import {CompanyModule} from "../company/company.module";
+import {BcryptService, PrismaService} from "@lulu/service";
+import {jwtConstants} from "@lulu/model";
 
 @Module({
   controllers: [AuthController],

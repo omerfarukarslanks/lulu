@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CompanyController } from './company.controller';
-import {PrismaService} from "@translations-config/service";
+import {PrismaService} from "@lulu/service";
 
 @Module({
   controllers: [CompanyController],

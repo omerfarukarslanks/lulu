@@ -1,7 +1,7 @@
 {
   "HTTP_PORT": 9090,
-  "GLOBAL_API_PREFIX": "api/translation-service",
-  "REVERSE_CONTEXT": "translation",
+  "GLOBAL_API_PREFIX": "api/lulu",
+  "REVERSE_CONTEXT": "lulu",
   "AUTH": {
     "SECRET": "iot_secret_auth",
     "EXPIRED_ON": "1d",

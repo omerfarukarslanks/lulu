@@ -8,9 +8,9 @@ import {NestFactory, repl} from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import helmet from "helmet";
-import {loadConfigJson} from "@translations-config/service";
-import {ServiceConfiguration} from "@translations-config/model";
 import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
+import {loadConfigJson} from "@lulu/service";
+import {ServiceConfiguration} from "@lulu/model";
 
 const config: ServiceConfiguration = loadConfigJson();
 async function bootstrap() {

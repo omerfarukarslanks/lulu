@@ -1,8 +1,8 @@
 import * as process from "process";
 import * as fs from "fs";
 import { join } from "path";
-import {ServiceConfiguration} from "@translations-config/model";
 import {Logger} from "@nestjs/common";
+import {ServiceConfiguration} from "@lulu/model";
 export const loadConfigJson = (message = "[LOAD] config.json file"): ServiceConfiguration => {
   let config: any = process.env["config"];
   if (!config) {

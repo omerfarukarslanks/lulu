@@ -1,9 +1,9 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import {BcryptService, PrismaService} from "@translations-config/service";
 import {UserResponse} from "./response/user-response";
 import {CompanyService} from "../company/company.service";
+import {BcryptService, PrismaService} from "@lulu/service";
 
 @Injectable()
 export class UserService {
@@ -25,6 +25,7 @@ export class UserService {
         email: createUserDto.email,
         password: await this.bcryptService.hash(createUserDto.password),
         phoneNumber: createUserDto.phoneNumber,
+        roleIds: JSON.stringify(createUserDto.roleIds),
         company: {
           connect: {
             id: createUserDto.companyId

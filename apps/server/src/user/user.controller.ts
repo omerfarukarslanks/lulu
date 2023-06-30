@@ -2,7 +2,7 @@ import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards,} from '@nest
 import {UserService} from './user.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
-import {AuthGuard} from "@translations-config/guard";
+import {AuthGuard} from "@lulu/guard";
 
 @Controller('user')
 export class UserController {

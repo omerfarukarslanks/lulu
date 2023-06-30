@@ -1,9 +1,8 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import {PrismaService} from "@translations-config/service";
 import {CompanyResponse} from "./response/company.response";
-import {JwtService} from "@nestjs/jwt";
+import {PrismaService} from "@lulu/service";
 
 @Injectable()
 export class CompanyService {

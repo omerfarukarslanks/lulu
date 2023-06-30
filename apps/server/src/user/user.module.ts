@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
-import {BcryptService, PrismaService} from "@translations-config/service";
 import {UserController} from "./user.controller";
 import {CompanyService} from "../company/company.service";
+import {BcryptService, PrismaService} from "@lulu/service";
 
 @Module({
   controllers: [UserController],

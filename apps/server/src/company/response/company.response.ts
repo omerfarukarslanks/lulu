@@ -1,4 +1,4 @@
-import {Company} from "../entities/company.entity";
+import {Company} from "@prisma/client";
 
 export class CompanyResponse {
   id: number;
