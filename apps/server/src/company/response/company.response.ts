@@ -5,7 +5,7 @@ export class CompanyResponse {
   name: string;
   email: string;
 
-  static formCompanyToEntity(company: Company) {
+  static fromCompanyToEntity(company: Company) {
     const companyResponse = new CompanyResponse();
     companyResponse.name = company.name;
     companyResponse.id = company.id;

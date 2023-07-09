@@ -1,4 +1,5 @@
 import {IsNotEmpty} from "class-validator";
+import {PermissionDto} from "./permission.dto";
 
 export class CreateRoleDto {
   @IsNotEmpty({
@@ -9,5 +10,5 @@ export class CreateRoleDto {
   @IsNotEmpty({
     message: 'Permissions cannot be empty'
   })
-  permissions: Array<string>;
+  permissions: Array<PermissionDto>;
 }

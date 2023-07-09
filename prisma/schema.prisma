@@ -27,26 +27,7 @@ model User {
   createdAt    DateTime      @default(now())
   companyId    Int
   company      Company       @relation(fields: [companyId], references: [id])
-  translations Translation[]
   roleIds      String
-}
-
-model Page {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
-  translations Translation[]
-}
-
-model Translation {
-  id      Int    @id @default(autoincrement())
-  english String
-  turkish String
-  german  String
-  russian String
-  userId  Int
-  user    User   @relation(fields: [userId], references: [id])
-  pageId  Int
-  page    Page   @relation(fields: [pageId], references: [id])
 }
 
 model Role {
