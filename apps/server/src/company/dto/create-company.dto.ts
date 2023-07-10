@@ -1,12 +1,31 @@
-import {IsNotEmpty} from "class-validator";
+import {CompanyType} from "@prisma/client";
 
 export class CreateCompanyDto {
-  @IsNotEmpty({
-    message: 'Name cannot be empty'
-  })
   name: string;
-  @IsNotEmpty({
-    message: 'Email cannot be empty',
-  })
   email: string;
+  phoneNumber: string;
+  isActive?: boolean;
+  type: CompanyType;
+
+  nameValidation = () => {
+    return !!this.name
+  }
+  emailValidation = () => {
+    return !!this.email
+  }
+  typeValidation = () => {
+    return !!this.type
+  }
+
+  validation = () => {
+    if(!this.nameValidation())
+      return 'company.validation.name';
+    if(!this.emailValidation()) {
+      return 'company.validation.email';
+    }
+    if(!this.typeValidation())
+      return 'company.validation.type'
+  }
+
 }
+

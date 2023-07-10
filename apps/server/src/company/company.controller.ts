@@ -5,15 +5,16 @@ import {
   Body,
   Patch,
   Param,
-  Delete, Put,
+  Delete, Put, ParseIntPipe, ParseBoolPipe,
 } from '@nestjs/common';
-import { CompanyService } from './company.service';
-import { CreateCompanyDto } from './dto/create-company.dto';
-import { UpdateCompanyDto } from './dto/update-company.dto';
+import {CompanyService} from './company.service';
+import {CreateCompanyDto} from './dto/create-company.dto';
+import {UpdateCompanyDto} from './dto/update-company.dto';
 
 @Controller('company')
 export class CompanyController {
-  constructor(private readonly companyService: CompanyService) {}
+  constructor(private readonly companyService: CompanyService) {
+  }
 
   @Post()
   create(@Body() createCompanyDto: CreateCompanyDto) {
@@ -35,8 +36,9 @@ export class CompanyController {
     return this.companyService.update(+id, updateCompanyDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companyService.remove(+id);
+  @Post('activation/:id/:isActive')
+  companyActivation(@Param('id', ParseIntPipe) id: number,
+                    @Param('isActive', ParseBoolPipe) isActive: boolean) {
+    return this.companyService.companyActivation(+id, isActive);
   }
 }

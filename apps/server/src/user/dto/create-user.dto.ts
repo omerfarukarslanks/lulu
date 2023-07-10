@@ -25,13 +25,15 @@ export class CreateUserDto {
   password: string;
 
   @IsNotEmpty({
-    message: 'Company cannot be empty'
+    message: 'Shop cannot be empty'
   })
   @IsNumber()
-  companyId: number;
+  shopId: number;
 
   @IsNotEmpty({
     message: 'Role cannot be empty'
   })
   roleIds: Array<number>;
+
+  isActive: boolean
 }

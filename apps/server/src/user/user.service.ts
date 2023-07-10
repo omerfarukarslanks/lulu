@@ -15,9 +15,9 @@ export class UserService {
     if (isEmailUnique)
       throw new BadRequestException(null, 'Email not unique');
 
-    const isCompanyAvailable = await this.companyService.findById(createUserDto.companyId);
+/*    const isCompanyAvailable = await this.companyService.findById(createUserDto.companyId);
     if(!isCompanyAvailable)
-      throw new BadRequestException(null, 'Company is not found');
+      throw new BadRequestException(null, 'Company is not found');*/
 
     const createUser = await this.prismaService.user.create({
       data: {
@@ -26,9 +26,10 @@ export class UserService {
         password: await this.bcryptService.hash(createUserDto.password),
         phoneNumber: createUserDto.phoneNumber,
         roleIds: JSON.stringify(createUserDto.roleIds),
-        company: {
+        isActive: createUserDto.isActive,
+        shop: {
           connect: {
-            id: createUserDto.companyId
+            id: createUserDto.shopId
           }
         }
       }
@@ -52,6 +53,15 @@ export class UserService {
       where: {id},
       data: {name: updateUserDto.name, email: updateUserDto.email, phoneNumber: updateUserDto.phoneNumber}
     })
+    return UserResponse.fromUserEntity(user);
+  }
+
+  async userActivation(id: number, isActive: boolean) {
+    const user = await this.prismaService.user.update({
+      where: {id},
+      data: {isActive}
+    })
+
     return UserResponse.fromUserEntity(user);
   }
 

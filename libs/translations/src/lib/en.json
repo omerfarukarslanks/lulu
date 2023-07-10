@@ -1,0 +1,12 @@
+{
+  "company": {
+    "validation": {
+      "name": "Name cannot be empty",
+      "email": "Email cannot empty",
+      "type": "Type cannot empty"
+    },
+    "error-message": {
+      "duplicate-email": "Mail is available"
+    }
+  }
+}

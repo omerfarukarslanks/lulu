@@ -5,17 +5,19 @@ export class UserResponse {
   name: string;
   email: string
   phoneNumber: string;
-  companyId: number;
+  shopId: number;
   roles: Array<string>;
   permissions: Array<string>;
+  isActive: boolean;
   static fromUserEntity(entity: User) {
     const response = new UserResponse();
     response.id = entity.id;
     response.name = entity.name
     response.email = entity.email;
     response.phoneNumber = entity.phoneNumber;
-    response.companyId = entity.companyId;
+    response.shopId = entity.shopId;
     response.roles = JSON.parse(entity.roleIds);
+    response.isActive = entity.isActive
     return response;
   }
 }

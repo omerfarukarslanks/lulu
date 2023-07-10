@@ -1,0 +1,12 @@
+{
+  "company": {
+    "validation": {
+      "name": "İsim boş bırakılamaz",
+      "email": "Email boş bırakılamaz",
+      "type": "Tip boş bırakılamaz"
+    },
+    "error-message": {
+      "duplicate-email": "Mail sistemde mevcuttur"
+    }
+  }
+}
