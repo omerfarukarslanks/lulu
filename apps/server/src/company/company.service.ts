@@ -1,8 +1,8 @@
 import {BadRequestException, Injectable} from '@nestjs/common';
-import {CreateCompanyDto} from './dto/create-company.dto';
-import {UpdateCompanyDto} from './dto/update-company.dto';
 import {CompanyResponse} from "./response/company.response";
 import {PrismaService} from "@lulu/service";
+import {CreateCompanyDto, UpdateCompanyDto} from "@lulu/model";
+import {CompanyValidation} from "./validation/company-validation";
 
 @Injectable()
 export class CompanyService {
@@ -10,7 +10,7 @@ export class CompanyService {
   }
 
   async create(createCompanyDto: CreateCompanyDto) {
-    const invalidCompany = createCompanyDto.validation();
+    const invalidCompany = CompanyValidation.createCompanyDtoValidation(createCompanyDto);
     if (invalidCompany)
       throw new BadRequestException(null, invalidCompany);
 
@@ -39,12 +39,12 @@ export class CompanyService {
   }
 
   async update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    const invalidCompany = updateCompanyDto.validation();
+    const invalidCompany = CompanyValidation.updateCompanyDtoValidation(updateCompanyDto);
     if (invalidCompany)
       throw new BadRequestException(null, invalidCompany);
 
     const isEmailAvailable = await this.checkEmailUniqueness(updateCompanyDto.email);
-    if (isEmailAvailable)
+    if (!!isEmailAvailable && id !== isEmailAvailable.id)
       throw new BadRequestException(null, 'company.error-message.duplicate-email');
 
     const company = await this.prismaService.company.update({

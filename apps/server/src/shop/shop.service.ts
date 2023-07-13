@@ -1,18 +1,18 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
-import {CreateShopDto} from './dto/create-shop.dto';
-import {UpdateShopDto} from './dto/update-shop.dto';
 import {PrismaService} from "@lulu/service";
 import {ShopResponse} from "./response/shop.response";
-import {CompanyResponse} from "../company/response/company.response";
+import {CreateShopDto, UpdateShopDto} from "@lulu/model";
+import {ShopValidation} from "./validation/shop-validation";
+import {CompanyService} from "../company/company.service";
 
 @Injectable()
 export class ShopService {
 
-  constructor(private readonly prismaService: PrismaService) {
+  constructor(private readonly prismaService: PrismaService, private companyService: CompanyService) {
   }
 
   async create(createShopDto: CreateShopDto) {
-    const invalidShop = createShopDto.validation();
+    const invalidShop = ShopValidation.createShopDtoValidation(createShopDto);
 
     if (invalidShop) {
       throw new BadRequestException(null, invalidShop);
@@ -52,16 +52,20 @@ export class ShopService {
   }
 
   async update(id: number, updateShopDto: UpdateShopDto) {
-    const invalidShop = updateShopDto.validation();
+    const invalidShop = ShopValidation.updateShopDtoValidation(updateShopDto);
 
     if (invalidShop) {
       throw new BadRequestException(null, invalidShop);
     }
 
     const isEmailAvailable = await this.checkEmailUniqueness(updateShopDto.email);
-    if (isEmailAvailable)
+    if (!isEmailAvailable && id !== isEmailAvailable.id)
       throw new BadRequestException(null, 'shop.error-message.duplicate-email');
 
+    const company = await this.companyService.findOne(updateShopDto.companyId);
+    if(!company) {
+      throw new NotFoundException('shop.error-message.not-found-company')
+    }
     const shop = await this.prismaService.shop.update({
       where: {id},
       data: {

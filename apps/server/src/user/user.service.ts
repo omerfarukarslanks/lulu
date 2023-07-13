@@ -11,13 +11,13 @@ export class UserService {
   constructor(private readonly prismaService: PrismaService, private bcryptService: BcryptService, private companyService: CompanyService) {
   }
   async create(createUserDto: CreateUserDto) {
+    const invalidUser = createUserDto.validation();
+    if(invalidUser) {
+      throw new BadRequestException(null, invalidUser);
+    }
     const isEmailUnique = await this.checkEmailUniqueness(createUserDto.email);
     if (isEmailUnique)
-      throw new BadRequestException(null, 'Email not unique');
-
-/*    const isCompanyAvailable = await this.companyService.findById(createUserDto.companyId);
-    if(!isCompanyAvailable)
-      throw new BadRequestException(null, 'Company is not found');*/
+      throw new BadRequestException(null, 'user.error-message.duplicate-email');
 
     const createUser = await this.prismaService.user.create({
       data: {
@@ -49,6 +49,14 @@ export class UserService {
     return UserResponse.fromUserEntity(user);
   }
   async update(id: number, updateUserDto: UpdateUserDto) {
+    const invalidUser = updateUserDto.validation();
+    if(invalidUser) {
+      throw new BadRequestException(null, invalidUser);
+    }
+    const isEmailUnique = await this.checkEmailUniqueness(updateUserDto.email);
+    if (isEmailUnique)
+      throw new BadRequestException(null, 'user.error-message.duplicate-email');
+
     const user = await this.prismaService.user.update({
       where: {id},
       data: {name: updateUserDto.name, email: updateUserDto.email, phoneNumber: updateUserDto.phoneNumber}
@@ -63,10 +71,6 @@ export class UserService {
     })
 
     return UserResponse.fromUserEntity(user);
-  }
-
-  async remove(id: number) {
-    return this.prismaService.user.delete({where: {id}});
   }
 
   async checkEmailUniqueness(email: string) {

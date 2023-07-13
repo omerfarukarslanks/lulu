@@ -3,13 +3,10 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete, Put, ParseIntPipe, ParseBoolPipe,
+  Param, Put, ParseIntPipe, ParseBoolPipe,
 } from '@nestjs/common';
 import {CompanyService} from './company.service';
-import {CreateCompanyDto} from './dto/create-company.dto';
-import {UpdateCompanyDto} from './dto/update-company.dto';
+import {CreateCompanyDto, UpdateCompanyDto} from "@lulu/model";
 
 @Controller('company')
 export class CompanyController {

@@ -1,10 +1,10 @@
 {
   "company": {
     "validation": {
-      "name-required": "İsim boş bırakılamaz",
-      "email-required": "Email boş bırakılamaz",
-      "type-required": "Tip boş bırakılamaz",
-      "phoneNumber-required": "Telefon numarası bırakılamaz"
+      "name-required": "İsim zorunludur",
+      "email-required": "Email zorunludur",
+      "type-required": "Tip zorunludur",
+      "phoneNumber-required": "Telefon zorunludur"
     },
     "error-message": {
       "duplicate-email": "Mail sistemde mevcuttur"
@@ -12,14 +12,28 @@
   },
   "shop": {
     "validation": {
-      "name-required": "İsim boş bırakılamaz",
-      "email-required": "Email boş bırakılamaz",
+      "name-required": "İsim zorunludur",
+      "email-required": "Email zorunludur",
       "phoneNumber-required": "Telefon numarası bırakılamaz",
-      "companyId-required": "Şirket boş bırakılamaz"
+      "companyId-required": "Firma zorunludur"
     },
     "error-message": {
-      "duplicate-email": "Mail sistemde mevcuttur",
-      "not-found-shop": "Şirket bulunamadı"
+      "duplicate-email": "Email sistemde mevcuttur",
+      "not-found-shop": "Mağaza bulunamadı",
+      "not-found-company": "Firma bulunamadı"
+    }
+  },
+  "user": {
+    "validation": {
+      "name-required": "İsim zorunludur",
+      "email-required": "Email zorunludur",
+      "phoneNumber-required": "Telefon numarası bırakılamaz",
+      "password-required": "Şifre bırakılamaz",
+      "shopId-required": "Mağaza bırakılamaz",
+      "roleIds-required": "Role bırakılamaz"
+    },
+    "error-message": {
+      "duplicate-email": "Email sistemde mevcuttur"
     }
   }
 }

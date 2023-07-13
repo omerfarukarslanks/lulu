@@ -15,10 +15,23 @@
       "name-required": "Name required",
       "email-required": "Email required",
       "phoneNumber-required": "Phone Number required",
-      "companyId-required": "Company required"
+      "companyId-required": "Shop required"
     },
     "error-message": {
-      "duplicate-email": "Mail is available"
+      "duplicate-email": "Email is available"
+    }
+  },
+  "user": {
+    "validation": {
+      "name-required": "Name required",
+      "email-required": "Email required",
+      "phoneNumber-required": "Phone Number required",
+      "password-required": "Password required",
+      "shopId-required": "Shop required",
+      "roleIds-required": "Role required"
+    },
+    "error-message": {
+      "duplicate-email": "Email is available"
     }
   }
 }
