@@ -7,7 +7,8 @@
       "phoneNumber-required": "Telefon zorunludur"
     },
     "error-message": {
-      "duplicate-email": "Mail sistemde mevcuttur"
+      "duplicate-email": "Mail sistemde mevcuttur",
+      "not-found-company": "Firma bulunamadı"
     }
   },
   "shop": {
@@ -34,6 +35,17 @@
     },
     "error-message": {
       "duplicate-email": "Email sistemde mevcuttur"
+    }
+  },
+  "role": {
+    "validation": {
+      "name-required": "İsim zorunludur",
+      "permission-name-required": "Yetki ismi zorunludur",
+      "permission-description-required": "Yetki açıklaması zorunludur"
+    },
+    "error-message": {
+      "duplicate-name": "İsim sistemde mevcuttur",
+      "not-found-role": "Role bulunamadı"
     }
   }
 }

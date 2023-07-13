@@ -3,13 +3,10 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
+  Param, Put, ParseIntPipe, ParseBoolPipe,
 } from '@nestjs/common';
 import { RoleService } from './role.service';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
+import {CreateRoleDto, UpdateRoleDto} from "@lulu/model";
 
 @Controller('role')
 export class RoleController {
@@ -30,13 +27,14 @@ export class RoleController {
     return this.roleService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     return this.roleService.update(+id, updateRoleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roleService.remove(+id);
+  @Post('activation/:id/:isActive')
+  activation(@Param('id', ParseIntPipe) id: number,
+             @Param('isActive', ParseBoolPipe) isActive: boolean) {
+    return this.roleService.roleActivation(id, isActive);
   }
 }

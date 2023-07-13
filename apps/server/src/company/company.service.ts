@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {CompanyResponse} from "./response/company.response";
 import {PrismaService} from "@lulu/service";
 import {CreateCompanyDto, UpdateCompanyDto} from "@lulu/model";
@@ -35,10 +35,19 @@ export class CompanyService {
   }
 
   async findOne(id: number) {
-    return this.prismaService.company.findUnique({where: {id}});
+    const company = await this.prismaService.company.findUnique({where: {id}});
+    if(!company) {
+      throw new NotFoundException('','company.error-message.not-found-company')
+    }
+    return CompanyResponse.fromCompanyToEntity(company);
   }
 
   async update(id: number, updateCompanyDto: UpdateCompanyDto) {
+    const findCompany = await this.prismaService.company.findUnique({where: {id}});
+    if(!findCompany) {
+      throw new NotFoundException('','company.error-message.not-found-company')
+    }
+
     const invalidCompany = CompanyValidation.updateCompanyDtoValidation(updateCompanyDto);
     if (invalidCompany)
       throw new BadRequestException(null, invalidCompany);
@@ -63,6 +72,10 @@ export class CompanyService {
   }
 
   async companyActivation(id: number, isActive: boolean) {
+    const findCompany = await this.prismaService.company.findUnique({where: {id}});
+    if(!findCompany) {
+      throw new NotFoundException('','company.error-message.not-found-company')
+    }
     const company = await this.prismaService.company.update({where: {id}, data: {isActive}})
     return CompanyResponse.fromCompanyToEntity(company);
   }

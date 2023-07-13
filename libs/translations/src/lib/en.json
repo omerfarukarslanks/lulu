@@ -7,7 +7,8 @@
       "phoneNumber-required": "Phone Number required"
     },
     "error-message": {
-      "duplicate-email": "Mail is available"
+      "duplicate-email": "Mail is available",
+      "not-found-company": "Company is not found"
     }
   },
   "shop": {
@@ -18,7 +19,9 @@
       "companyId-required": "Shop required"
     },
     "error-message": {
-      "duplicate-email": "Email is available"
+      "duplicate-email": "Email is available",
+      "not-found-shop": "Shop is not found",
+      "not-found-company": "Company is not found"
     }
   },
   "user": {
@@ -32,6 +35,17 @@
     },
     "error-message": {
       "duplicate-email": "Email is available"
+    }
+  },
+  "role": {
+    "validation": {
+      "name-required": "Name required",
+      "permission-name-required": "Permission name required",
+      "permission-description-required": "Permission description required"
+    },
+    "error-message": {
+      "duplicate-name": "Name is available",
+      "not-found-role": "Role is not found"
     }
   }
 }

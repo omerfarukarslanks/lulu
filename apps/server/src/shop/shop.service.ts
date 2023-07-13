@@ -44,7 +44,6 @@ export class ShopService {
 
   async findOne(id: number) {
     const shop = await this.prismaService.shop.findUnique({where: {id}})
-
     if (!shop) {
       throw new NotFoundException(null, 'shop.error-message.not-found-shop')
     }
@@ -52,20 +51,26 @@ export class ShopService {
   }
 
   async update(id: number, updateShopDto: UpdateShopDto) {
-    const invalidShop = ShopValidation.updateShopDtoValidation(updateShopDto);
+    const findShop = await this.prismaService.shop.findUnique({where: {id}})
+    if (!findShop) {
+      throw new NotFoundException(null, 'shop.error-message.not-found-shop')
+    }
 
+    const invalidShop = ShopValidation.updateShopDtoValidation(updateShopDto);
     if (invalidShop) {
       throw new BadRequestException(null, invalidShop);
+    }
+
+    const company = await this.companyService.findOne(updateShopDto.companyId);
+    if(!company) {
+      throw new NotFoundException('shop.error-message.not-found-company')
     }
 
     const isEmailAvailable = await this.checkEmailUniqueness(updateShopDto.email);
     if (!isEmailAvailable && id !== isEmailAvailable.id)
       throw new BadRequestException(null, 'shop.error-message.duplicate-email');
 
-    const company = await this.companyService.findOne(updateShopDto.companyId);
-    if(!company) {
-      throw new NotFoundException('shop.error-message.not-found-company')
-    }
+
     const shop = await this.prismaService.shop.update({
       where: {id},
       data: {
@@ -86,6 +91,10 @@ export class ShopService {
   }
 
   async shopActivation(id: number, isActive: boolean) {
+    const findShop = await this.prismaService.shop.findUnique({where: {id}})
+    if (!findShop) {
+      throw new NotFoundException(null, 'shop.error-message.not-found-shop')
+    }
     const shop = await this.prismaService.shop.update({where: {id}, data: {isActive}})
     return ShopResponse.fromToEntity(shop);
   }
