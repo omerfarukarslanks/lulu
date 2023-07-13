@@ -1,12 +1,25 @@
 {
   "company": {
     "validation": {
-      "name": "İsim boş bırakılamaz",
-      "email": "Email boş bırakılamaz",
-      "type": "Tip boş bırakılamaz"
+      "name-required": "İsim boş bırakılamaz",
+      "email-required": "Email boş bırakılamaz",
+      "type-required": "Tip boş bırakılamaz",
+      "phoneNumber-required": "Telefon numarası bırakılamaz"
     },
     "error-message": {
       "duplicate-email": "Mail sistemde mevcuttur"
+    }
+  },
+  "shop": {
+    "validation": {
+      "name-required": "İsim boş bırakılamaz",
+      "email-required": "Email boş bırakılamaz",
+      "phoneNumber-required": "Telefon numarası bırakılamaz",
+      "companyId-required": "Şirket boş bırakılamaz"
+    },
+    "error-message": {
+      "duplicate-email": "Mail sistemde mevcuttur",
+      "not-found-shop": "Şirket bulunamadı"
     }
   }
 }

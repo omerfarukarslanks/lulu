@@ -35,5 +35,5 @@ export class CreateUserDto {
   })
   roleIds: Array<number>;
 
-  isActive: boolean
+  isActive: boolean;
 }

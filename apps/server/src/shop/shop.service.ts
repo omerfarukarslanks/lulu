@@ -1,30 +1,88 @@
-import { Injectable } from '@nestjs/common';
-import { CreateShopDto } from './dto/create-shop.dto';
-import { UpdateShopDto } from './dto/update-shop.dto';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {CreateShopDto} from './dto/create-shop.dto';
+import {UpdateShopDto} from './dto/update-shop.dto';
 import {PrismaService} from "@lulu/service";
+import {ShopResponse} from "./response/shop.response";
+import {CompanyResponse} from "../company/response/company.response";
 
 @Injectable()
 export class ShopService {
 
   constructor(private readonly prismaService: PrismaService) {
   }
-  create(createShopDto: CreateShopDto) {
-    return 'This action adds a new shop';
+
+  async create(createShopDto: CreateShopDto) {
+    const invalidShop = createShopDto.validation();
+
+    if (invalidShop) {
+      throw new BadRequestException(null, invalidShop);
+    }
+
+    const isEmailAvailable = await this.checkEmailUniqueness(createShopDto.email);
+    if (isEmailAvailable)
+      throw new BadRequestException(null, 'shop.error-message.duplicate-email');
+
+    const shop = await this.prismaService.shop.create({
+      data: {
+        email: createShopDto.email,
+        name: createShopDto.name,
+        phoneNumber: createShopDto.phoneNumber,
+        isActive: createShopDto.isActive,
+        company: {
+          connect: {
+            id: createShopDto.companyId
+          }
+        }
+      },
+    })
+    return ShopResponse.fromToEntity(shop);
   }
 
-  findAll() {
-    return `This action returns all shop`;
+  async findAll() {
+    return this.prismaService.shop.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} shop`;
+  async findOne(id: number) {
+    const shop = await this.prismaService.shop.findUnique({where: {id}})
+
+    if (!shop) {
+      throw new NotFoundException(null, 'shop.error-message.not-found-shop')
+    }
+    return ShopResponse.fromToEntity(shop);
   }
 
-  update(id: number, updateShopDto: UpdateShopDto) {
-    return `This action updates a #${id} shop`;
+  async update(id: number, updateShopDto: UpdateShopDto) {
+    const invalidShop = updateShopDto.validation();
+
+    if (invalidShop) {
+      throw new BadRequestException(null, invalidShop);
+    }
+
+    const isEmailAvailable = await this.checkEmailUniqueness(updateShopDto.email);
+    if (isEmailAvailable)
+      throw new BadRequestException(null, 'shop.error-message.duplicate-email');
+
+    const shop = await this.prismaService.shop.update({
+      where: {id},
+      data: {
+        name: updateShopDto.name,
+        email: updateShopDto.email,
+        phoneNumber: updateShopDto.phoneNumber,
+        isActive: updateShopDto.isActive,
+        company: {
+          connect: {id: updateShopDto.companyId}
+        }
+      }
+    })
+    return ShopResponse.fromToEntity(shop);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} shop`;
+  checkEmailUniqueness(email: string) {
+    return this.prismaService.shop.findUnique({where: {email}})
+  }
+
+  async shopActivation(id: number, isActive: boolean) {
+    const shop = await this.prismaService.shop.update({where: {id}, data: {isActive}})
+    return ShopResponse.fromToEntity(shop);
   }
 }

@@ -1,9 +1,21 @@
 {
   "company": {
     "validation": {
-      "name": "Name cannot be empty",
-      "email": "Email cannot empty",
-      "type": "Type cannot empty"
+      "name-required": "Name required",
+      "email-required": "Email required",
+      "type-required": "Type required",
+      "phoneNumber-required": "Phone Number required"
+    },
+    "error-message": {
+      "duplicate-email": "Mail is available"
+    }
+  },
+  "shop": {
+    "validation": {
+      "name-required": "Name required",
+      "email-required": "Email required",
+      "phoneNumber-required": "Phone Number required",
+      "companyId-required": "Company required"
     },
     "error-message": {
       "duplicate-email": "Mail is available"

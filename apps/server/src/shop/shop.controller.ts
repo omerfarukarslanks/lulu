@@ -5,7 +5,7 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  Delete, ParseIntPipe, ParseBoolPipe,
 } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { CreateShopDto } from './dto/create-shop.dto';
@@ -35,8 +35,9 @@ export class ShopController {
     return this.shopService.update(+id, updateShopDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.shopService.remove(+id);
+  @Post('activation/:id/:isActive')
+  shopActivation(@Param('id', ParseIntPipe) id: number,
+                    @Param('isActive', ParseBoolPipe) isActive: boolean) {
+    return this.shopService.shopActivation(+id, isActive);
   }
 }

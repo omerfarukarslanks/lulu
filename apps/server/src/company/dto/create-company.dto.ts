@@ -17,14 +17,20 @@ export class CreateCompanyDto {
     return !!this.type
   }
 
+  phoneNumberValidation = () => {
+    return !!this.phoneNumber
+  }
+
   validation = () => {
     if(!this.nameValidation())
-      return 'company.validation.name';
+      return 'company.validation.name-required';
     if(!this.emailValidation()) {
-      return 'company.validation.email';
+      return 'company.validation.email-required';
     }
     if(!this.typeValidation())
-      return 'company.validation.type'
+      return 'company.validation.type-required'
+    if(!this.phoneNumberValidation())
+      return 'company.validation.phoneNumber-required'
   }
 
 }
