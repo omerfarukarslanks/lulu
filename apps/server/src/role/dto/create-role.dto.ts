@@ -11,4 +11,5 @@ export class CreateRoleDto {
     message: 'Permissions cannot be empty'
   })
   permissions: Array<PermissionDto>;
+  isActive: boolean;
 }

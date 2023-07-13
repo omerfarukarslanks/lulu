@@ -12,7 +12,8 @@ export class RoleService {
      const role = await this.prismaService.role.create({
        data: {
          name: createRoleDto.name,
-         permissions: JSON.stringify(createRoleDto.permissions)
+         permissions: JSON.stringify(createRoleDto.permissions),
+         isActive: createRoleDto.isActive
        }
     });
 

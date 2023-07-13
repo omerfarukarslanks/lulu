@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Put, UseGuards,} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseBoolPipe, ParseIntPipe, Post, Put, UseGuards,} from '@nestjs/common';
 import {UserService} from './user.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
@@ -33,9 +33,13 @@ export class UserController {
   ) {
     return this.userService.update(+id, updateUserDto);
   }
+
   @UseGuards(AuthGuard)
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Put('activation/:id/:isActive')
+  userActivation(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('isActive', ParseBoolPipe)  isActive: boolean,
+  ) {
+    return this.userService.userActivation(id, isActive);
   }
 }

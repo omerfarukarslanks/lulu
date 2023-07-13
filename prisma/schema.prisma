@@ -11,27 +11,87 @@ datasource db {
 }
 
 model Company {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  createdAt DateTime @default(now())
-  user      User[]
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  name        String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  phoneNumber String
+  shop        Shop[]
+  type        CompanyType?
+  isActive    Boolean
+}
+
+model Shop {
+  id          Int        @id @default(autoincrement())
+  email       String     @unique
+  name        String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  phoneNumber String
+  isActive    Boolean
+  user        User[]
+  customer    Customer[]
+  supplier    Supplier[]
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId Int?
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  name         String
-  phoneNumber  String
-  password     String
-  createdAt    DateTime      @default(now())
-  companyId    Int
-  company      Company       @relation(fields: [companyId], references: [id])
-  roleIds      String
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  name        String
+  phoneNumber String
+  password    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  roleIds     String
+  isActive    Boolean
+  shopId      Int
+  shop        Shop     @relation(fields: [shopId], references: [id])
+}
+
+model Customer {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  phoneNumber String
+  type        CustomerType?
+  isActive    Boolean
+  shopId      Int
+  shop        Shop          @relation(fields: [shopId], references: [id])
+}
+
+model Supplier {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String
+  phoneNumber String
+  isActive    Boolean
+  shopId      Int
+  shop        Shop     @relation(fields: [shopId], references: [id])
 }
 
 model Role {
-  id          Int          @id @default(autoincrement())
-  name        String
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String   @unique
   permissions String
+  isActive    Boolean
+}
+
+enum CompanyType {
+  INDIVIDUAL
+  COMPANY
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  COMPANY
 }

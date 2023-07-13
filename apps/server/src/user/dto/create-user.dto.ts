@@ -1,37 +1,49 @@
 import {IsEmail, IsNotEmpty, IsNumber} from "class-validator";
 
 export class CreateUserDto {
-  id: number;
-
-  @IsNotEmpty({
-    message: 'Name cannot be empty'
-  })
   name: string;
-
-  @IsNotEmpty({
-    message: 'Email cannot be empty'
-  })
-  @IsEmail()
   email: string;
-
-  @IsNotEmpty({
-    message: 'PhoneNumber cannot be empty'
-  })
   phoneNumber: string;
-
-  @IsNotEmpty({
-    message: 'Password cannot be empty'
-  })
   password: string;
-
-  @IsNotEmpty({
-    message: 'Company cannot be empty'
-  })
-  @IsNumber()
-  companyId: number;
-
-  @IsNotEmpty({
-    message: 'Role cannot be empty'
-  })
+  shopId: number;
   roleIds: Array<number>;
+  isActive: boolean;
+  nameValidation = () => {
+    return !!this.name
+  }
+
+  emailValidation = () => {
+    return !!this.email
+  }
+
+  phoneNumberValidation = () => {
+    return !!this.phoneNumber
+  }
+
+  passwordValidation = () => {
+    return !!this.password
+  }
+
+  shopIdValidation = () => {
+    return !!this.shopId
+  }
+
+  roleIdsValidation = () => {
+    return !!this.roleIds
+  }
+
+  validation() {
+    if (!this.nameValidation())
+      return 'user.validation.name-required';
+    if (!this.emailValidation())
+      return 'user.validation.email-required';
+    if (!this.phoneNumberValidation())
+      return 'user.validation.phoneNumber-required';
+    if (!this.passwordValidation())
+      return 'user.validation.password-required';
+    if (!this.shopIdValidation())
+      return 'user.validation.shopId-required';
+    if (!this.roleIdsValidation())
+      return 'user.validation.roleIds-required';
+  }
 }
