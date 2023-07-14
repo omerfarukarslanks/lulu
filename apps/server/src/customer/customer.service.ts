@@ -61,8 +61,8 @@ export class CustomerService {
     if (emailAvailableValues?.length > 0)
       throw new BadRequestException(null, 'customer.error-message.duplicate-email');
 
-    const customer = await this.prismaService.customer.findUnique({where: {id}});
-    if (!customer)
+    const findCustomer = await this.prismaService.customer.findUnique({where: {id}});
+    if (!findCustomer)
       throw new NotFoundException(null, 'customer.error-message.not-found-customer');
 
     const findShop = await this.shopService.findOne(updateCustomerDto.shopId);
@@ -70,7 +70,23 @@ export class CustomerService {
     if (!findShop)
       throw new NotFoundException(null, 'customer.error-message.not-found-shop');
 
-    return `This action updates a #${id} customer`;
+    const customer = await this.prismaService.customer.update({
+      where: {id},
+      data: {
+        name: updateCustomerDto.name,
+        email: updateCustomerDto.email,
+        phoneNumber: updateCustomerDto.phoneNumber,
+        type: updateCustomerDto.type,
+        roleIds: JSON.stringify(updateCustomerDto.roleIds),
+        isActive: updateCustomerDto.isActive,
+        shop: {
+          connect: {
+            id: updateCustomerDto.shopId
+          }
+        }
+      }
+    })
+    return CustomerResponse.fromDtoToEntity(customer);
   }
 
   async checkEmailUniqueness(email: string, id?: number) {
