@@ -3,13 +3,10 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
+  Param, Put, ParseIntPipe, ParseBoolPipe,
 } from '@nestjs/common';
 import { SupplierService } from './supplier.service';
-import { CreateSupplierDto } from './dto/create-supplier.dto';
-import { UpdateSupplierDto } from './dto/update-supplier.dto';
+import {CreateSupplierDto, UpdateSupplierDto} from "@lulu/model";
 
 @Controller('supplier')
 export class SupplierController {
@@ -30,7 +27,7 @@ export class SupplierController {
     return this.supplierService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(
     @Param('id') id: string,
     @Body() updateSupplierDto: UpdateSupplierDto
@@ -38,8 +35,9 @@ export class SupplierController {
     return this.supplierService.update(+id, updateSupplierDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.supplierService.remove(+id);
+  @Put('activation/:id/:isActive')
+  supplierActivation(@Param('id', ParseIntPipe) id: number,
+                     @Param('isActive', ParseBoolPipe) isActive: boolean) {
+    return this.supplierService.supplierActivation(id, isActive);
   }
 }

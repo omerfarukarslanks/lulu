@@ -71,5 +71,19 @@
       "user-passive": "User is not active",
       "wrong-password": "You entered the wrong password"
     }
+  },
+  "supplier": {
+    "validation": {
+      "name-required": "Name required",
+      "email-required": "Email required",
+      "phoneNumber-required": "Phone Number required",
+      "shopId-required": "Shop required",
+      "roleIds-required": "Role required"
+    },
+    "error-message": {
+      "duplicate-email": "Email is available",
+      "not-found-supplier": "Supplier is not found",
+      "not-found-shop": "Shop is not found"
+    }
   }
 }

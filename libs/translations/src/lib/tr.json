@@ -71,5 +71,19 @@
       "user-passive": "Kullanıcı aktif değildir",
       "wrong-password": "Yanlış şifre girdiniz"
     }
+  },
+  "supplier": {
+    "validation": {
+      "name-required": "İsim zorunludur",
+      "email-required": "Email zorunludur",
+      "phoneNumber-required": "Telefon numarası bırakılamaz",
+      "shopId-required": "Mağaza bırakılamaz",
+      "roleIds-required": "Role bırakılamaz"
+    },
+    "error-message": {
+      "duplicate-email": "Email sistemde mevcuttur",
+      "not-found-supplier": "Tedarikçi bulunamadı",
+      "not-found-shop": "Mağaza bulunamadı"
+    }
   }
 }

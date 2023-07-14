@@ -8,9 +8,10 @@ import {CompanyModule} from "../company/company.module";
 import {RoleModule} from "../role/role.module";
 import {ShopModule} from "../shop/shop.module";
 import {CustomerModule} from "../customer/customer.module";
+import {SupplierModule} from "../supplier/supplier.module";
 
 @Module({
-  imports: [UserModule, AuthModule, CompanyModule, RoleModule, ShopModule, CustomerModule],
+  imports: [UserModule, AuthModule, CompanyModule, RoleModule, ShopModule, CustomerModule, SupplierModule],
   controllers: [AppController],
   providers: [AppService],
 })
