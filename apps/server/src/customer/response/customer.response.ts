@@ -18,5 +18,6 @@ export class CustomerResponse{
     response.isActive  =entity.isActive;
     response.roleIds = JSON.parse(<string>entity.roleIds);
     response.shopId = entity.shopId;
+    return response;
   }
 }

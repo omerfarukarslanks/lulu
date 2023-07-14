@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Param, Put,
+  Param, Put, ParseIntPipe, ParseBoolPipe,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import {CreateCustomerDto, UpdateCustomerDto} from "@lulu/model";
@@ -33,5 +33,11 @@ export class CustomerController {
     @Body() updateCustomerDto: UpdateCustomerDto
   ) {
     return this.customerService.update(+id, updateCustomerDto);
+  }
+
+  @Put('activation/:id/:isActive')
+  customerActivation(@Param('id', ParseIntPipe) id: number,
+                     @Param('isActive', ParseBoolPipe) isActive: boolean){
+    return this.customerService.customerActivation(id, isActive);
   }
 }

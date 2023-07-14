@@ -88,7 +88,7 @@ export class UserService {
         email: updateUserDto.email,
         phoneNumber: updateUserDto.phoneNumber,
         roleIds: JSON.stringify(updateUserDto.roleIds),
-        password: updateUserDto.password,
+        password: await this.bcryptService.hash(updateUserDto.password),
         isActive: updateUserDto.isActive,
         shop: {connect: {id: updateUserDto.shopId}}
       }
