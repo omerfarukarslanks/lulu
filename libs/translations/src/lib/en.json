@@ -64,5 +64,11 @@
       "not-found-customer": "User is not found",
       "not-found-shop": "Shop is not found"
     }
+  },
+  "auth": {
+    "error-message": {
+      "invalid-credentials": "Invalid Credentials",
+      "user-passive": "User is not active"
+    }
   }
 }

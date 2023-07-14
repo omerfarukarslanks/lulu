@@ -14,7 +14,10 @@ export class AuthService {
   async validate(email: string, password: string) {
     const user = await this.userService.checkEmailUniqueness(email);
     if(!user)
-      throw new NotFoundException("Invalid Credentials");
+      throw new NotFoundException("auth.error-message.invalid-credentials");
+
+    if(!user[0].isActive)
+      throw new UnauthorizedException(null, 'auth.error-message.user-passive')
 
     const isPasswordMatch = await this.bcryptService.compare(
       password,
@@ -28,7 +31,7 @@ export class AuthService {
 
   async login(user: LoginDto) {
    const findUser = await this.validate(user.email, user.password)
-    const payload = { sub: findUser[0].id, email: findUser[0].email, companyId: findUser[0].shopId };
+    const payload = { id: findUser[0].id, email: findUser[0].email, companyId: findUser[0].shopId };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

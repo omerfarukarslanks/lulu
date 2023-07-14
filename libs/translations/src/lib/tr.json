@@ -64,5 +64,11 @@
       "not-found-customer": "Kullanıcı bulunamadı",
       "not-found-shop": "Mağaza bulunamadı"
     }
+  },
+  "auth": {
+    "error-message": {
+      "invalid-credentials": "Geçersiz kimlik bilgileri",
+      "user-passive": "Kullanıcı aktif değildir"
+    }
   }
 }
