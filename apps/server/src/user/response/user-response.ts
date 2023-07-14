@@ -16,7 +16,7 @@ export class UserResponse {
     response.email = entity.email;
     response.phoneNumber = entity.phoneNumber;
     response.shopId = entity.shopId;
-    response.roles = JSON.parse(entity.roleIds);
+    response.roles = JSON.parse(<string>entity.roleIds);
     response.isActive = entity.isActive
     return response;
   }

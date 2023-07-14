@@ -18,7 +18,7 @@ export class AuthService {
 
     const isPasswordMatch = await this.bcryptService.compare(
       password,
-      user.password,
+      user[0].password,
     );
     if (!isPasswordMatch) {
       throw new UnauthorizedException();
@@ -28,7 +28,7 @@ export class AuthService {
 
   async login(user: LoginDto) {
    const findUser = await this.validate(user.email, user.password)
-    const payload = { sub: findUser.id, email: findUser.email, companyId: findUser.shopId };
+    const payload = { sub: findUser[0].id, email: findUser[0].email, companyId: findUser[0].shopId };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

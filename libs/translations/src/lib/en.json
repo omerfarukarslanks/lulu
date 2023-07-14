@@ -34,7 +34,9 @@
       "roleIds-required": "Role required"
     },
     "error-message": {
-      "duplicate-email": "Email is available"
+      "duplicate-email": "Email is available",
+      "not-found-user": "User is not found",
+      "not-found-shop": "Shop is not found"
     }
   },
   "role": {

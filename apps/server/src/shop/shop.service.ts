@@ -18,8 +18,8 @@ export class ShopService {
       throw new BadRequestException(null, invalidShop);
     }
 
-    const isEmailAvailable = await this.checkEmailUniqueness(createShopDto.email);
-    if (isEmailAvailable)
+    const emailAvailableValues = await this.checkEmailUniqueness(createShopDto.email);
+    if (emailAvailableValues?.length > 0)
       throw new BadRequestException(null, 'shop.error-message.duplicate-email');
 
     const shop = await this.prismaService.shop.create({
@@ -51,23 +51,24 @@ export class ShopService {
   }
 
   async update(id: number, updateShopDto: UpdateShopDto) {
+
+    const invalidMessage = ShopValidation.updateShopDtoValidation(updateShopDto);
+    if (invalidMessage) {
+      throw new BadRequestException(null, invalidMessage);
+    }
+
     const findShop = await this.prismaService.shop.findUnique({where: {id}})
     if (!findShop) {
       throw new NotFoundException(null, 'shop.error-message.not-found-shop')
     }
 
-    const invalidShop = ShopValidation.updateShopDtoValidation(updateShopDto);
-    if (invalidShop) {
-      throw new BadRequestException(null, invalidShop);
-    }
-
     const company = await this.companyService.findOne(updateShopDto.companyId);
-    if(!company) {
+    if (!company) {
       throw new NotFoundException('shop.error-message.not-found-company')
     }
 
-    const isEmailAvailable = await this.checkEmailUniqueness(updateShopDto.email);
-    if (!isEmailAvailable && id !== isEmailAvailable.id)
+    const emailAvailableValues = await this.checkEmailUniqueness(updateShopDto.email,id);
+    if (emailAvailableValues?.length > 0)
       throw new BadRequestException(null, 'shop.error-message.duplicate-email');
 
 
@@ -86,8 +87,11 @@ export class ShopService {
     return ShopResponse.fromToEntity(shop);
   }
 
-  checkEmailUniqueness(email: string) {
-    return this.prismaService.shop.findUnique({where: {email}})
+  async checkEmailUniqueness(email: string, id?: number) {
+    if (id) {
+      return this.prismaService.shop.findMany({where: {AND: [{email, NOT: [{id}]}]}})
+    }
+    return this.prismaService.shop.findMany({where: {email}})
   }
 
   async shopActivation(id: number, isActive: boolean) {

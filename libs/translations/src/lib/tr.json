@@ -34,7 +34,9 @@
       "roleIds-required": "Role bırakılamaz"
     },
     "error-message": {
-      "duplicate-email": "Email sistemde mevcuttur"
+      "duplicate-email": "Email sistemde mevcuttur",
+      "not-found-user": "Kullanıcı bulunamadı",
+      "not-found-shop": "Mağaza bulunamadı"
     }
   },
   "role": {

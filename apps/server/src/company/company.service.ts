@@ -14,8 +14,8 @@ export class CompanyService {
     if (invalidCompany)
       throw new BadRequestException(null, invalidCompany);
 
-    const isEmailAvailable = await this.checkEmailUniqueness(createCompanyDto.email);
-    if (isEmailAvailable)
+    const emailAvailableValues = await this.checkEmailUniqueness(createCompanyDto.email);
+    if (emailAvailableValues?.length > 0)
       throw new BadRequestException(null, 'company.error-message.duplicate-email');
 
     const company = await this.prismaService.company.create({
@@ -52,8 +52,8 @@ export class CompanyService {
     if (invalidCompany)
       throw new BadRequestException(null, invalidCompany);
 
-    const isEmailAvailable = await this.checkEmailUniqueness(updateCompanyDto.email);
-    if (!!isEmailAvailable && id !== isEmailAvailable.id)
+    const emailAvailableValues = await this.checkEmailUniqueness(updateCompanyDto.email,id);
+    if (emailAvailableValues?.length > 0)
       throw new BadRequestException(null, 'company.error-message.duplicate-email');
 
     const company = await this.prismaService.company.update({
@@ -80,7 +80,10 @@ export class CompanyService {
     return CompanyResponse.fromCompanyToEntity(company);
   }
 
-  checkEmailUniqueness(email: string) {
-    return this.prismaService.company.findUnique({where: {email}})
+  checkEmailUniqueness(email: string,id?: number) {
+    if(id) {
+      return this.prismaService.company.findMany({where: {AND: {email, NOT: {id}}}})
+    }
+    return this.prismaService.company.findMany({where: {email}})
   }
 }

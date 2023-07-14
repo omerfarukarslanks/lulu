@@ -7,5 +7,6 @@ import {CompanyService} from "../company/company.service";
 @Module({
   controllers: [ShopController],
   providers: [ShopService, PrismaService, CompanyService],
+  exports: [ShopService]
 })
 export class ShopModule {}

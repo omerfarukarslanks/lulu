@@ -46,7 +46,7 @@ model User {
   password    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  roleIds     String
+  roleIds     Json
   isActive    Boolean
   shopId      Int
   shop        Shop     @relation(fields: [shopId], references: [id])
@@ -60,6 +60,7 @@ model Customer {
   updatedAt   DateTime      @updatedAt
   phoneNumber String
   type        CustomerType?
+  roleIds     Json
   isActive    Boolean
   shopId      Int
   shop        Shop          @relation(fields: [shopId], references: [id])
@@ -72,6 +73,7 @@ model Supplier {
   updatedAt   DateTime @updatedAt
   name        String
   phoneNumber String
+  roleIds     Json
   isActive    Boolean
   shopId      Int
   shop        Shop     @relation(fields: [shopId], references: [id])
@@ -82,7 +84,7 @@ model Role {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String   @unique
-  permissions String
+  permissions Json
   isActive    Boolean
 }
 

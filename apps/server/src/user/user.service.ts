@@ -1,22 +1,29 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {UserResponse} from "./response/user-response";
-import {CompanyService} from "../company/company.service";
 import {BcryptService, PrismaService} from "@lulu/service";
+import {CreateUserDto, UpdateUserDto} from "@lulu/model";
+import {UserValidation} from "./validation/user-validation";
+import {ShopService} from "../shop/shop.service";
 
 @Injectable()
 export class UserService {
 
-  constructor(private readonly prismaService: PrismaService, private bcryptService: BcryptService, private companyService: CompanyService) {
+  constructor(private readonly prismaService: PrismaService, private bcryptService: BcryptService, private shopService: ShopService) {
   }
+
   async create(createUserDto: CreateUserDto) {
-    const invalidUser = createUserDto.validation();
-    if(invalidUser) {
+    const invalidUser = UserValidation.createUserDtoValidation(createUserDto);
+    if (invalidUser) {
       throw new BadRequestException(null, invalidUser);
     }
-    const isEmailUnique = await this.checkEmailUniqueness(createUserDto.email);
-    if (isEmailUnique)
+
+    const findShop = await this.shopService.findOne(createUserDto.shopId);
+    if (!findShop) {
+      throw new NotFoundException(null, 'user.error-message.not-found-shop');
+    }
+
+    const emailAvailableValues = await this.checkEmailUniqueness(createUserDto.email);
+    if (emailAvailableValues?.length > 0)
       throw new BadRequestException(null, 'user.error-message.duplicate-email');
 
     const createUser = await this.prismaService.user.create({
@@ -39,32 +46,64 @@ export class UserService {
   }
 
   async findAll() {
-    return  this.prismaService.user.findMany();
+    return this.prismaService.user.findMany();
   }
 
   async findOne(id: number) {
     const user = await this.prismaService.user.findUnique({
       where: {id}
     });
+    if (!user) {
+      throw new NotFoundException(null, 'user.error-message.not-found-user')
+    }
     return UserResponse.fromUserEntity(user);
   }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const invalidUser = updateUserDto.validation();
-    if(invalidUser) {
+    const invalidUser = UserValidation.updateUserDtoValidation(updateUserDto);
+    if (invalidUser) {
       throw new BadRequestException(null, invalidUser);
     }
-    const isEmailUnique = await this.checkEmailUniqueness(updateUserDto.email);
-    if (isEmailUnique)
+
+    const findUser = await this.prismaService.user.findUnique({
+      where: {id}
+    });
+    if (!findUser) {
+      throw new NotFoundException(null, 'user.error-message.not-found-user')
+    }
+
+    const findShop = await this.shopService.findOne(updateUserDto.shopId);
+    if (!findShop) {
+      throw new NotFoundException(null, 'user.error-message.not-found-shop');
+    }
+
+    const emailAvailableValues = await this.checkEmailUniqueness(updateUserDto.email, id);
+    if (emailAvailableValues?.length > 0)
       throw new BadRequestException(null, 'user.error-message.duplicate-email');
 
     const user = await this.prismaService.user.update({
       where: {id},
-      data: {name: updateUserDto.name, email: updateUserDto.email, phoneNumber: updateUserDto.phoneNumber}
+      data: {
+        name: updateUserDto.name,
+        email: updateUserDto.email,
+        phoneNumber: updateUserDto.phoneNumber,
+        roleIds: JSON.stringify(updateUserDto.roleIds),
+        password: updateUserDto.password,
+        isActive: updateUserDto.isActive,
+        shop: {connect: {id: updateUserDto.shopId}}
+      }
     })
     return UserResponse.fromUserEntity(user);
   }
 
   async userActivation(id: number, isActive: boolean) {
+    const findUser = await this.prismaService.user.findUnique({
+      where: {id}
+    });
+    if (!findUser) {
+      throw new NotFoundException(null, 'user.error-message.not-found-user')
+    }
+
     const user = await this.prismaService.user.update({
       where: {id},
       data: {isActive}
@@ -73,8 +112,11 @@ export class UserService {
     return UserResponse.fromUserEntity(user);
   }
 
-  async checkEmailUniqueness(email: string) {
-    return this.prismaService.user.findUnique({
+  async checkEmailUniqueness(email: string, id?: number) {
+    if (id) {
+      return this.prismaService.user.findMany({where: {email, NOT: [{id}]}})
+    }
+    return this.prismaService.user.findMany({
       where: {email}
     })
   }

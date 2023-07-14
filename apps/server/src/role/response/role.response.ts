@@ -9,7 +9,7 @@ export class RoleResponse {
     const roleResponse = new RoleResponse();
     roleResponse.id = role.id;
     roleResponse.name = role.name
-    roleResponse.permissions = JSON.parse(role.permissions);
+    roleResponse.permissions = JSON.parse(<string>role.permissions);
     return roleResponse;
   }
 }

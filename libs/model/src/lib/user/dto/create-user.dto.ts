@@ -1,14 +1,7 @@
-import {IsEmail, IsNotEmpty, IsNumber} from "class-validator";
+import {BaseUserDto} from "./base-user.dto";
 
-export class CreateUserDto {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  password: string;
-  shopId: number;
-  roleIds: Array<number>;
-  isActive: boolean;
-  nameValidation = () => {
+export type CreateUserDto = BaseUserDto
+/*  nameValidation = () => {
     return !!this.name
   }
 
@@ -45,5 +38,5 @@ export class CreateUserDto {
       return 'user.validation.shopId-required';
     if (!this.roleIdsValidation())
       return 'user.validation.roleIds-required';
-  }
-}
+  }*/
+
