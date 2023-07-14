@@ -68,7 +68,8 @@
   "auth": {
     "error-message": {
       "invalid-credentials": "Geçersiz kimlik bilgileri",
-      "user-passive": "Kullanıcı aktif değildir"
+      "user-passive": "Kullanıcı aktif değildir",
+      "wrong-password": "Yanlış şifre girdiniz"
     }
   }
 }

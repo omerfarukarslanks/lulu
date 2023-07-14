@@ -68,7 +68,8 @@
   "auth": {
     "error-message": {
       "invalid-credentials": "Invalid Credentials",
-      "user-passive": "User is not active"
+      "user-passive": "User is not active",
+      "wrong-password": "You entered the wrong password"
     }
   }
 }

@@ -24,7 +24,7 @@ export class AuthService {
       user[0].password,
     );
     if (!isPasswordMatch) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException(null, 'auth.error-message.wrong-password');
     }
     return user;
   }
