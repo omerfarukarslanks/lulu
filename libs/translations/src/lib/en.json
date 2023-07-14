@@ -49,5 +49,20 @@
       "duplicate-name": "Name is available",
       "not-found-role": "Role is not found"
     }
+  },
+  "customer": {
+    "validation": {
+      "name-required": "Name required",
+      "email-required": "Email required",
+      "phoneNumber-required": "Phone Number required",
+      "type-required": "Type required",
+      "shopId-required": "Shop required",
+      "roleIds-required": "Role required"
+    },
+    "error-message": {
+      "duplicate-email": "Email is available",
+      "not-found-customer": "User is not found",
+      "not-found-shop": "Shop is not found"
+    }
   }
 }

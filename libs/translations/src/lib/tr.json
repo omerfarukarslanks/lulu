@@ -49,5 +49,20 @@
       "duplicate-name": "İsim sistemde mevcuttur",
       "not-found-role": "Role bulunamadı"
     }
+  },
+  "customer": {
+    "validation": {
+      "name-required": "İsim zorunludur",
+      "email-required": "Email zorunludur",
+      "phoneNumber-required": "Telefon numarası bırakılamaz",
+      "type-required": "Tip zorunludur",
+      "shopId-required": "Mağaza bırakılamaz",
+      "roleIds-required": "Role bırakılamaz"
+    },
+    "error-message": {
+      "duplicate-email": "Email sistemde mevcuttur",
+      "not-found-customer": "Kullanıcı bulunamadı",
+      "not-found-shop": "Mağaza bulunamadı"
+    }
   }
 }
