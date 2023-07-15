@@ -1,7 +1,8 @@
 import {Body, Controller, Delete, Get, Param, ParseBoolPipe, ParseIntPipe, Post, Put, UseGuards,} from '@nestjs/common';
 import {UserService} from './user.service';
-import {AuthGuard} from "@lulu/guard";
-import {CreateUserDto, UpdateUserDto} from "@lulu/model";
+import {AuthGuard, RolesGuard} from "@lulu/guard";
+import {CreateUserDto, RoleEnum, UpdateUserDto} from "@lulu/model";
+import {HasRole} from "@lulu/decorator";
 
 @Controller('user')
 export class UserController {
@@ -12,19 +13,22 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @UseGuards(AuthGuard)
+  @HasRole(RoleEnum.ADMIN)
+  @UseGuards(AuthGuard,RolesGuard)
   @Get()
   findAll() {
     return this.userService.findAll();
   }
 
-  @UseGuards(AuthGuard)
+  @HasRole(RoleEnum.ADMIN)
+  @UseGuards(AuthGuard,RolesGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard)
+  @HasRole(RoleEnum.ADMIN)
+  @UseGuards(AuthGuard,RolesGuard)
   @Put(':id')
   update(
     @Param('id') id: string,
@@ -33,7 +37,8 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
-  @UseGuards(AuthGuard)
+  @HasRole(RoleEnum.ADMIN)
+  @UseGuards(AuthGuard,RolesGuard)
   @Put('activation/:id/:isActive')
   userActivation(
     @Param('id', ParseIntPipe) id: number,
