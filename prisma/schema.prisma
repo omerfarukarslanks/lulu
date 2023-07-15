@@ -39,7 +39,7 @@ model Shop {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
+  id          Int      @id @default(autoincrement()) //uuid
   email       String   @unique
   name        String
   phoneNumber String

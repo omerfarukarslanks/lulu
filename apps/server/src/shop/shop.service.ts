@@ -13,14 +13,16 @@ export class ShopService {
 
   async create(createShopDto: CreateShopDto) {
     const invalidShop = ShopValidation.createShopDtoValidation(createShopDto);
-
-    if (invalidShop) {
+    if (invalidShop)
       throw new BadRequestException(null, invalidShop);
-    }
 
-    const emailAvailableValues = await this.checkEmailUniqueness(createShopDto.email);
-    if (emailAvailableValues?.length > 0)
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(createShopDto.email);
+    if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'shop.error-message.duplicate-email');
+
+    const companyCount = await this.companyService.findCompanyCountById(createShopDto.companyId);
+    if (companyCount === 0)
+      throw new NotFoundException('', 'shop.error-message.not-found-company')
 
     const shop = await this.prismaService.shop.create({
       data: {
@@ -43,34 +45,30 @@ export class ShopService {
   }
 
   async findOne(id: number) {
-    const shop = await this.prismaService.shop.findUnique({where: {id}})
-    if (!shop) {
+    const shop = await this.findShopById(id);
+    if (!shop)
       throw new NotFoundException(null, 'shop.error-message.not-found-shop')
-    }
+
     return ShopResponse.fromToEntity(shop);
   }
 
   async update(id: number, updateShopDto: UpdateShopDto) {
 
     const invalidMessage = ShopValidation.updateShopDtoValidation(updateShopDto);
-    if (invalidMessage) {
+    if (invalidMessage)
       throw new BadRequestException(null, invalidMessage);
-    }
 
-    const findShop = await this.prismaService.shop.findUnique({where: {id}})
-    if (!findShop) {
+    const findShopCount = await this.findShopCountById(id);
+    if (findShopCount === 0)
       throw new NotFoundException(null, 'shop.error-message.not-found-shop')
-    }
 
-    const company = await this.companyService.findOne(updateShopDto.companyId);
-    if (!company) {
+    const companyCount = await this.companyService.findCompanyCountById(updateShopDto.companyId);
+    if (companyCount === 0)
       throw new NotFoundException('shop.error-message.not-found-company')
-    }
 
-    const emailAvailableValues = await this.checkEmailUniqueness(updateShopDto.email,id);
-    if (emailAvailableValues?.length > 0)
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(updateShopDto.email, id);
+    if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'shop.error-message.duplicate-email');
-
 
     const shop = await this.prismaService.shop.update({
       where: {id},
@@ -87,19 +85,27 @@ export class ShopService {
     return ShopResponse.fromToEntity(shop);
   }
 
-  async checkEmailUniqueness(email: string, id?: number) {
-    if (id) {
-      return this.prismaService.shop.findMany({where: {AND: [{email, NOT: [{id}]}]}})
-    }
-    return this.prismaService.shop.findMany({where: {email}})
-  }
-
   async shopActivation(id: number, isActive: boolean) {
-    const findShop = await this.prismaService.shop.findUnique({where: {id}})
-    if (!findShop) {
+    const findShopCount = await this.findShopCountById(id);
+    if (findShopCount === 0)
       throw new NotFoundException(null, 'shop.error-message.not-found-shop')
-    }
+
     const shop = await this.prismaService.shop.update({where: {id}, data: {isActive}})
     return ShopResponse.fromToEntity(shop);
+  }
+
+
+  async checkEmailUniquenessCountByEmailOrById(email: string, id?: number) {
+    if (id)
+      return this.prismaService.shop.count({where: {AND: [{email, NOT: [{id}]}]}});
+    return this.prismaService.shop.count({where: {email}});
+  }
+
+  async findShopCountById(id: number) {
+    return this.prismaService.shop.count({where: {id}});
+  }
+
+  async findShopById(id: number) {
+    return this.prismaService.shop.findUnique({where: {id}});
   }
 }

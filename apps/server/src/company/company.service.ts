@@ -14,8 +14,8 @@ export class CompanyService {
     if (invalidCompany)
       throw new BadRequestException(null, invalidCompany);
 
-    const emailAvailableValues = await this.checkEmailUniqueness(createCompanyDto.email);
-    if (emailAvailableValues?.length > 0)
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(createCompanyDto.email);
+    if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'company.error-message.duplicate-email');
 
     const company = await this.prismaService.company.create({
@@ -35,26 +35,26 @@ export class CompanyService {
   }
 
   async findOne(id: number) {
-    const company = await this.prismaService.company.findUnique({where: {id}});
-    if(!company) {
-      throw new NotFoundException('','company.error-message.not-found-company')
-    }
+    const company = await this.findCompanyById(id);
+    if (!company)
+      throw new NotFoundException('', 'company.error-message.not-found-company')
+
     return CompanyResponse.fromCompanyToEntity(company);
   }
 
   async update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    const findCompany = await this.prismaService.company.findUnique({where: {id}});
-    if(!findCompany) {
-      throw new NotFoundException('','company.error-message.not-found-company')
-    }
-
     const invalidCompany = CompanyValidation.updateCompanyDtoValidation(updateCompanyDto);
     if (invalidCompany)
       throw new BadRequestException(null, invalidCompany);
 
-    const emailAvailableValues = await this.checkEmailUniqueness(updateCompanyDto.email,id);
-    if (emailAvailableValues?.length > 0)
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(updateCompanyDto.email, id);
+    if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'company.error-message.duplicate-email');
+
+    const companyCount = await this.findCompanyCountById(id);
+    if (companyCount === 0) {
+      throw new NotFoundException('', 'company.error-message.not-found-company')
+    }
 
     const company = await this.prismaService.company.update({
       where: {
@@ -72,18 +72,25 @@ export class CompanyService {
   }
 
   async companyActivation(id: number, isActive: boolean) {
-    const findCompany = await this.prismaService.company.findUnique({where: {id}});
-    if(!findCompany) {
-      throw new NotFoundException('','company.error-message.not-found-company')
-    }
+    const companyCount = await this.findCompanyCountById(id);
+    if (companyCount === 0)
+      throw new NotFoundException('', 'company.error-message.not-found-company')
+
     const company = await this.prismaService.company.update({where: {id}, data: {isActive}})
     return CompanyResponse.fromCompanyToEntity(company);
   }
 
-  checkEmailUniqueness(email: string,id?: number) {
-    if(id) {
-      return this.prismaService.company.findMany({where: {AND: {email, NOT: {id}}}})
-    }
-    return this.prismaService.company.findMany({where: {email}})
+  async checkEmailUniquenessCountByEmailOrById(email: string, id?: number) {
+    if (id)
+      return this.prismaService.company.count({where: {AND: {email, NOT: {id}}}});
+    return this.prismaService.company.count({where: {email}});
+  }
+
+  async findCompanyCountById(id: number) {
+    return this.prismaService.company.count({where: {id}});
+  }
+
+  async findCompanyById(id: number) {
+    return this.prismaService.company.findUnique({where: {id}});
   }
 }

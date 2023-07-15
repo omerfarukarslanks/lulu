@@ -12,18 +12,16 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    const invalidUser = UserValidation.createUserDtoValidation(createUserDto);
-    if (invalidUser) {
-      throw new BadRequestException(null, invalidUser);
-    }
+    const invalidMessage = UserValidation.createUserDtoValidation(createUserDto);
+    if (invalidMessage)
+      throw new BadRequestException(null, invalidMessage);
 
-    const findShop = await this.shopService.findOne(createUserDto.shopId);
-    if (!findShop) {
+    const findShopCount = await this.shopService.findShopCountById(createUserDto.shopId);
+    if (findShopCount === 0)
       throw new NotFoundException(null, 'user.error-message.not-found-shop');
-    }
 
-    const emailAvailableValues = await this.checkEmailUniqueness(createUserDto.email);
-    if (emailAvailableValues?.length > 0)
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(createUserDto.email);
+    if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'user.error-message.duplicate-email');
 
     const createUser = await this.prismaService.user.create({
@@ -50,35 +48,29 @@ export class UserService {
   }
 
   async findOne(id: number) {
-    const user = await this.prismaService.user.findUnique({
-      where: {id}
-    });
-    if (!user) {
+    const user = await this.findUserById(id);
+    if (!user)
       throw new NotFoundException(null, 'user.error-message.not-found-user')
-    }
+
     return UserResponse.fromUserEntity(user);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const invalidUser = UserValidation.updateUserDtoValidation(updateUserDto);
-    if (invalidUser) {
+    if (invalidUser)
       throw new BadRequestException(null, invalidUser);
-    }
 
-    const findUser = await this.prismaService.user.findUnique({
-      where: {id}
-    });
-    if (!findUser) {
+    const findUserCount = await this.findUserCountById(id);
+    if (findUserCount === 0)
       throw new NotFoundException(null, 'user.error-message.not-found-user')
-    }
 
-    const findShop = await this.shopService.findOne(updateUserDto.shopId);
-    if (!findShop) {
+
+    const findShopCount = await this.shopService.findShopCountById(updateUserDto.shopId);
+    if (findShopCount === 0)
       throw new NotFoundException(null, 'user.error-message.not-found-shop');
-    }
 
-    const emailAvailableValues = await this.checkEmailUniqueness(updateUserDto.email, id);
-    if (emailAvailableValues?.length > 0)
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(updateUserDto.email, id);
+    if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'user.error-message.duplicate-email');
 
     const user = await this.prismaService.user.update({
@@ -97,12 +89,9 @@ export class UserService {
   }
 
   async userActivation(id: number, isActive: boolean) {
-    const findUser = await this.prismaService.user.findUnique({
-      where: {id}
-    });
-    if (!findUser) {
+    const findUserCount = await this.findUserCountById(id);
+    if (findUserCount === 0)
       throw new NotFoundException(null, 'user.error-message.not-found-user')
-    }
 
     const user = await this.prismaService.user.update({
       where: {id},
@@ -112,12 +101,23 @@ export class UserService {
     return UserResponse.fromUserEntity(user);
   }
 
-  async checkEmailUniqueness(email: string, id?: number) {
-    if (id) {
-      return this.prismaService.user.findMany({where: {email, NOT: [{id}]}})
-    }
-    return this.prismaService.user.findMany({
+  async checkEmailUniquenessCountByEmailOrById(email: string, id?: number) {
+    if (id)
+      return this.prismaService.user.count({where: {email, NOT: [{id}]}})
+    return this.prismaService.user.count({
       where: {email}
     })
+  }
+
+  async findUserCountById(id: number) {
+    return this.prismaService.user.count({where: {id}});
+  }
+
+  async findUserById(id: number) {
+    return this.prismaService.user.findUnique({where: {id}});
+  }
+
+  async findUserByEmail(email: string) {
+    return this.prismaService.user.findUnique({where: {email}});
   }
 }

@@ -16,12 +16,12 @@ export class SupplierService {
     if (invalidMessage)
       throw new BadRequestException(null, invalidMessage);
 
-    const findShop = await this.shopService.findOne(createSupplierDto.shopId);
-    if (!findShop)
+    const findShopCount = await this.shopService.findShopCountById(createSupplierDto.shopId);
+    if (!findShopCount)
       throw new NotFoundException(null, 'supplier.error-message.not-found-shop');
 
-    const emailAvailableValues = await this.checkEmailUniqueness(createSupplierDto.email);
-    if (emailAvailableValues && emailAvailableValues?.length > 0)
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(createSupplierDto.email);
+    if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'supplier.error-message.duplicate-email');
 
     const supplier = await this.prismaService.supplier.create({
@@ -37,7 +37,7 @@ export class SupplierService {
           }
         }
       }
-    })
+    });
     return SupplierResponse.fromDtoToEntity(supplier);
   }
 
@@ -46,9 +46,10 @@ export class SupplierService {
   }
 
   async findOne(id: number) {
-    const findSupplier = await this.prismaService.supplier.findUnique({where: {id}});
+    const findSupplier = await this.findSupplierById(id);
     if (!findSupplier)
       throw new NotFoundException(null, 'supplier.error-message.not-found-supplier');
+
     return SupplierResponse.fromDtoToEntity(findSupplier);
   }
 
@@ -57,17 +58,16 @@ export class SupplierService {
     if (invalidMessage)
       throw new BadRequestException(null, invalidMessage);
 
-    const findSupplier = await this.prismaService.supplier.findUnique({where: {id}});
-    if (!findSupplier)
+    const findSupplierCount = await this.findSupplierCountById(id);
+    if (findSupplierCount === 0)
       throw new NotFoundException(null, 'supplier.error-message.not-found-supplier');
 
-
-    const findShop = await this.shopService.findOne(updateSupplierDto.shopId);
-    if (!findShop)
+    const findShopCount = await this.shopService.findShopCountById(updateSupplierDto.shopId);
+    if (findShopCount === 0)
       throw new NotFoundException(null, 'supplier.error-message.not-found-shop');
 
-    const emailAvailableValues = await this.checkEmailUniqueness(updateSupplierDto.email, id);
-    if (emailAvailableValues && emailAvailableValues?.length > 0)
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(updateSupplierDto.email, id);
+    if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'supplier.error-message.duplicate-email');
 
     const supplier = await this.prismaService.supplier.update({
@@ -84,22 +84,30 @@ export class SupplierService {
           }
         }
       }
-    })
+    });
     return SupplierResponse.fromDtoToEntity(supplier);
   }
 
   async supplierActivation(id: number, isActive: boolean) {
-    const findSupplier = await this.prismaService.supplier.findUnique({where: {id}});
-    if (!findSupplier)
+    const findSupplierCount = await this.findSupplierCountById(id);
+    if (findSupplierCount === 0 )
       throw new NotFoundException(null, 'supplier.error-message.not-found-supplier');
-    const supplier =await this.prismaService.supplier.update({where: {id}, data: {isActive}});
+
+    const supplier = await this.prismaService.supplier.update({where: {id}, data: {isActive}});
     return SupplierResponse.fromDtoToEntity(supplier);
   }
 
-  async checkEmailUniqueness(email: string, id?: number) {
+  async checkEmailUniquenessCountByEmailOrById(email: string, id?: number) {
     if (id)
-      return this.prismaService.supplier.findMany({where: {AND: [{email, NOT: [{id}]}]}})
-    else
-      return this.prismaService.supplier.findMany({where: {email}});
+      return this.prismaService.supplier.count({where: {AND: [{email, NOT: [{id}]}]}})
+    return this.prismaService.supplier.count({where: {email}});
+  }
+
+  async findSupplierCountById(id: number) {
+    return this.prismaService.supplier.count({where: {id}});
+  }
+
+  async findSupplierById(id: number) {
+    return this.prismaService.supplier.findUnique({where: {id}});
   }
 }
