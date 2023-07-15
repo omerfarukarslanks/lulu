@@ -16,8 +16,8 @@ export class RoleService {
       throw new BadRequestException(null, invalidMessage);
     }
 
-    const findRole = await this.checkNameUniqueness(createRoleDto.name);
-    if (findRole) {
+    const findRoleCount = await this.checkNameUniquenessCountByNameOrById(createRoleDto.name);
+    if (findRoleCount > 0) {
       throw new BadRequestException(null, 'role.error-message.duplicate-name');
     }
 
@@ -37,26 +37,24 @@ export class RoleService {
   }
 
   async findOne(id: number) {
-    const role = await this.prismaService.role.findUnique({where: {id}});
+    const role = await this.findRoleById(id);
     if (!role)
       throw new NotFoundException('', 'role.error-message.not-found-role')
     return RoleResponse.fromRoleEntity(role)
   }
 
   async update(id: number, updateRoleDto: UpdateRoleDto) {
-
-    const uniqueRole = await this.prismaService.role.findUnique({where: {id}});
-    if (!uniqueRole)
-      throw new NotFoundException('', 'role.error-message.not-found-role')
-
-
     const invalidMessage = RoleValidation.updateRoleValidation(updateRoleDto);
     if (invalidMessage) {
       throw new BadRequestException(null, invalidMessage);
     }
 
-    const findRole = await this.checkNameUniqueness(updateRoleDto.name);
-    if (findRole && findRole.id !== id) {
+    const findRoleCount = await this.findByRoleCountById(id);
+    if (findRoleCount === 0)
+      throw new NotFoundException('', 'role.error-message.not-found-role')
+
+    const nameAvailableCount = await this.checkNameUniquenessCountByNameOrById(updateRoleDto.name, id);
+    if (nameAvailableCount > 0) {
       throw new BadRequestException(null, 'role.error-message.duplicate-name');
     }
 
@@ -72,18 +70,28 @@ export class RoleService {
   }
 
   async roleActivation(id: number, isActive: boolean) {
-    const findRole = await this.prismaService.role.findUnique({where: {id}});
-    if (!findRole)
+    const findRoleCount = await this.findByRoleCountById(id);
+    if (findRoleCount === 0)
       throw new NotFoundException('', 'role.error-message.not-found-role')
 
     const role = await this.prismaService.role.update({
       where: {id},
       data: {isActive}
     })
-     return RoleResponse.fromRoleEntity(role);
+    return RoleResponse.fromRoleEntity(role);
   }
 
-  checkNameUniqueness(name: string) {
-    return this.prismaService.role.findUnique({where: {name}});
+  checkNameUniquenessCountByNameOrById(name: string, id?: number) {
+    if (id)
+      return this.prismaService.role.count({where: {name, NOT: [{id}]}});
+    return this.prismaService.role.count({where: {name}});
+  }
+
+  async findByRoleCountById(id: number) {
+    return this.prismaService.role.count({where: {id}});
+  }
+
+  async findRoleById(id: number) {
+    return this.prismaService.role.findUnique({where: {id}});
   }
 }
