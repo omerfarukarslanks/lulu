@@ -4,11 +4,12 @@ import {PrismaService} from "@lulu/service";
 import {SupplierValidation} from "./validation/supplier-validation";
 import {ShopService} from "../shop/shop.service";
 import {SupplierResponse} from "./response/supplier.response";
+import {RoleService} from "../role/role.service";
 
 @Injectable()
 export class SupplierService {
 
-  constructor(private readonly prismaService: PrismaService, private shopService: ShopService) {
+  constructor(private readonly prismaService: PrismaService, private shopService: ShopService, private roleService: RoleService) {
   }
 
   async create(createSupplierDto: CreateSupplierDto) {
@@ -16,24 +17,32 @@ export class SupplierService {
     if (invalidMessage)
       throw new BadRequestException(null, invalidMessage);
 
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(createSupplierDto.email);
+    if (emailAvailableCount > 0)
+      throw new BadRequestException(null, 'supplier.error-message.duplicate-email');
+
     const findShopCount = await this.shopService.findShopCountById(createSupplierDto.shopId);
     if (!findShopCount)
       throw new NotFoundException(null, 'supplier.error-message.not-found-shop');
 
-    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(createSupplierDto.email);
-    if (emailAvailableCount > 0)
-      throw new BadRequestException(null, 'supplier.error-message.duplicate-email');
+    const findRoleCount = await this.roleService.findByRoleCountById(createSupplierDto.roleId);
+    if(findRoleCount === 0)
+      throw new NotFoundException(null, 'supplier.error-message.not-found-role');
 
     const supplier = await this.prismaService.supplier.create({
       data: {
         name: createSupplierDto.name,
         email: createSupplierDto.email,
         phoneNumber: createSupplierDto.phoneNumber,
-        roleIds: JSON.stringify(createSupplierDto.roleIds),
         isActive: createSupplierDto.isActive,
         shop: {
           connect: {
             id: createSupplierDto.shopId
+          }
+        },
+        role: {
+          connect: {
+            id: createSupplierDto.roleId
           }
         }
       }
@@ -54,21 +63,25 @@ export class SupplierService {
   }
 
   async update(id: number, updateSupplierDto: UpdateSupplierDto) {
+    const findSupplierCount = await this.findSupplierCountById(id);
+    if (findSupplierCount === 0)
+      throw new NotFoundException(null, 'supplier.error-message.not-found-supplier');
+
     const invalidMessage = SupplierValidation.updateDtoValidation(updateSupplierDto);
     if (invalidMessage)
       throw new BadRequestException(null, invalidMessage);
 
-    const findSupplierCount = await this.findSupplierCountById(id);
-    if (findSupplierCount === 0)
-      throw new NotFoundException(null, 'supplier.error-message.not-found-supplier');
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(updateSupplierDto.email, id);
+    if (emailAvailableCount > 0)
+      throw new BadRequestException(null, 'supplier.error-message.duplicate-email');
 
     const findShopCount = await this.shopService.findShopCountById(updateSupplierDto.shopId);
     if (findShopCount === 0)
       throw new NotFoundException(null, 'supplier.error-message.not-found-shop');
 
-    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(updateSupplierDto.email, id);
-    if (emailAvailableCount > 0)
-      throw new BadRequestException(null, 'supplier.error-message.duplicate-email');
+    const findRoleCount = await this.roleService.findByRoleCountById(updateSupplierDto.roleId);
+    if(findRoleCount === 0)
+      throw new NotFoundException(null, 'supplier.error-message.not-found-role');
 
     const supplier = await this.prismaService.supplier.update({
       where: {id},
@@ -76,11 +89,15 @@ export class SupplierService {
         name: updateSupplierDto.name,
         email: updateSupplierDto.email,
         phoneNumber: updateSupplierDto.phoneNumber,
-        roleIds: JSON.stringify(updateSupplierDto.roleIds),
         isActive: updateSupplierDto.isActive,
         shop: {
           connect: {
             id: updateSupplierDto.shopId
+          }
+        },
+        role: {
+          connect: {
+            id: updateSupplierDto.roleId
           }
         }
       }

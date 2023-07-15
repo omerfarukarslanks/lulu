@@ -2,7 +2,7 @@ export interface BaseSupplierDto {
   name: string;
   email: string;
   phoneNumber: string;
-  roleIds: Array<string>;
+  roleId: number;
   shopId: number;
   isActive: boolean;
 }

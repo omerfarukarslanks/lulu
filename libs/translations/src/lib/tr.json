@@ -31,12 +31,13 @@
       "phoneNumber-required": "Telefon numarası bırakılamaz",
       "password-required": "Şifre bırakılamaz",
       "shopId-required": "Mağaza bırakılamaz",
-      "roleIds-required": "Role bırakılamaz"
+      "roleId-required": "Role bırakılamaz"
     },
     "error-message": {
       "duplicate-email": "Email sistemde mevcuttur",
       "not-found-user": "Kullanıcı bulunamadı",
-      "not-found-shop": "Mağaza bulunamadı"
+      "not-found-shop": "Mağaza bulunamadı",
+      "not-found-role": "Rol bulunamadı"
     }
   },
   "role": {
@@ -57,12 +58,13 @@
       "phoneNumber-required": "Telefon numarası bırakılamaz",
       "type-required": "Tip zorunludur",
       "shopId-required": "Mağaza bırakılamaz",
-      "roleIds-required": "Role bırakılamaz"
+      "roleId-required": "Role bırakılamaz"
     },
     "error-message": {
       "duplicate-email": "Email sistemde mevcuttur",
       "not-found-customer": "Kullanıcı bulunamadı",
-      "not-found-shop": "Mağaza bulunamadı"
+      "not-found-shop": "Mağaza bulunamadı",
+      "not-found-role": "Rol bulunamadı"
     }
   },
   "auth": {
@@ -78,12 +80,13 @@
       "email-required": "Email zorunludur",
       "phoneNumber-required": "Telefon numarası bırakılamaz",
       "shopId-required": "Mağaza bırakılamaz",
-      "roleIds-required": "Role bırakılamaz"
+      "roleId-required": "Role bırakılamaz"
     },
     "error-message": {
       "duplicate-email": "Email sistemde mevcuttur",
       "not-found-supplier": "Tedarikçi bulunamadı",
-      "not-found-shop": "Mağaza bulunamadı"
+      "not-found-shop": "Mağaza bulunamadı",
+      "not-found-role": "Rol bulunamadı"
     }
   }
 }

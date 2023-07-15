@@ -10,10 +10,11 @@ import {BcryptService, PrismaService} from "@lulu/service";
 import {jwtConstants} from "@lulu/model";
 import {CompanyService} from "../company/company.service";
 import {ShopService} from "../shop/shop.service";
+import {RoleService} from "../role/role.service";
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, UserService, PrismaService, BcryptService, CompanyService, ShopService],
+  providers: [AuthService, UserService, PrismaService, BcryptService, CompanyService, ShopService, RoleService],
   imports: [
     PassportModule,UserModule, CompanyModule,
     JwtModule.register({

@@ -41,9 +41,9 @@ CREATE TABLE "User" (
     "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "shopId" INTEGER NOT NULL,
-    "roleIds" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL,
+    "roleId" INTEGER NOT NULL,
+    "shopId" INTEGER NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -58,6 +58,7 @@ CREATE TABLE "Customer" (
     "phoneNumber" TEXT NOT NULL,
     "type" "CustomerType",
     "isActive" BOOLEAN NOT NULL,
+    "roleId" INTEGER NOT NULL,
     "shopId" INTEGER NOT NULL,
 
     CONSTRAINT "Customer_pkey" PRIMARY KEY ("id")
@@ -72,6 +73,7 @@ CREATE TABLE "Supplier" (
     "name" TEXT NOT NULL,
     "phoneNumber" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL,
+    "roleId" INTEGER NOT NULL,
     "shopId" INTEGER NOT NULL,
 
     CONSTRAINT "Supplier_pkey" PRIMARY KEY ("id")
@@ -83,7 +85,7 @@ CREATE TABLE "Role" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
-    "permissions" TEXT NOT NULL,
+    "permissions" JSONB NOT NULL,
     "isActive" BOOLEAN NOT NULL,
 
     CONSTRAINT "Role_pkey" PRIMARY KEY ("id")
@@ -111,10 +113,19 @@ CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
 ALTER TABLE "Shop" ADD CONSTRAINT "Shop_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "Company"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_shopId_fkey" FOREIGN KEY ("shopId") REFERENCES "Shop"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Customer" ADD CONSTRAINT "Customer_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Customer" ADD CONSTRAINT "Customer_shopId_fkey" FOREIGN KEY ("shopId") REFERENCES "Shop"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Supplier" ADD CONSTRAINT "Supplier_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Supplier" ADD CONSTRAINT "Supplier_shopId_fkey" FOREIGN KEY ("shopId") REFERENCES "Shop"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

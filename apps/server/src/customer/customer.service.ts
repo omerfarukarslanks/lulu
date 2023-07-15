@@ -4,10 +4,11 @@ import {PrismaService} from "@lulu/service";
 import {ShopService} from "../shop/shop.service";
 import {CustomerValidation} from "./validation/customer-validation";
 import {CustomerResponse} from "./response/customer.response";
+import {RoleService} from "../role/role.service";
 
 @Injectable()
 export class CustomerService {
-  constructor(private readonly prismaService: PrismaService, private shopService: ShopService) {
+  constructor(private readonly prismaService: PrismaService, private shopService: ShopService, private roleService: RoleService) {
   }
 
   async create(createCustomerDto: CreateCustomerDto) {
@@ -23,17 +24,25 @@ export class CustomerService {
     if (findShopCount === 0)
       throw new NotFoundException(null, 'customer.error-message.not-found-shop');
 
+    const findRoleCount = await this.roleService.findByRoleCountById(createCustomerDto.roleId);
+    if(findRoleCount === 0)
+      throw new NotFoundException(null, 'supplier.error-message.not-found-role');
+
     const customer = await this.prismaService.customer.create({
       data: {
         name: createCustomerDto.name,
         email: createCustomerDto.email,
         phoneNumber: createCustomerDto.phoneNumber,
         type: createCustomerDto.type,
-        roleIds: JSON.stringify(createCustomerDto.roleIds),
         isActive: createCustomerDto.isActive,
         shop: {
           connect: {
             id: createCustomerDto.shopId
+          }
+        },
+        role: {
+          connect: {
+            id: createCustomerDto.roleId
           }
         }
       }
@@ -54,6 +63,10 @@ export class CustomerService {
   }
 
   async update(id: number, updateCustomerDto: UpdateCustomerDto) {
+    const findCustomerCount = await this.findCustomerCountById(id);
+    if (findCustomerCount === 0)
+      throw new NotFoundException(null, 'customer.error-message.not-found-customer');
+
     const invalidMessage = CustomerValidation.updateCustomerDtoValidation(updateCustomerDto);
     if (invalidMessage)
       throw new BadRequestException(null, invalidMessage);
@@ -62,13 +75,13 @@ export class CustomerService {
     if (emailAvailableCount > 0)
       throw new BadRequestException(null, 'customer.error-message.duplicate-email');
 
-    const findCustomerCount = await this.findCustomerCountById(id);
-    if (findCustomerCount === 0)
-      throw new NotFoundException(null, 'customer.error-message.not-found-customer');
-
     const findShopCount = await this.shopService.findShopCountById(updateCustomerDto.shopId);
     if (findShopCount === 0)
       throw new NotFoundException(null, 'customer.error-message.not-found-shop');
+
+    const findRoleCount = await this.roleService.findByRoleCountById(updateCustomerDto.roleId);
+    if(findRoleCount === 0)
+      throw new NotFoundException(null, 'supplier.error-message.not-found-role');
 
     const customer = await this.prismaService.customer.update({
       where: {id},
@@ -77,11 +90,15 @@ export class CustomerService {
         email: updateCustomerDto.email,
         phoneNumber: updateCustomerDto.phoneNumber,
         type: updateCustomerDto.type,
-        roleIds: JSON.stringify(updateCustomerDto.roleIds),
         isActive: updateCustomerDto.isActive,
         shop: {
           connect: {
             id: updateCustomerDto.shopId
+          }
+        },
+        role: {
+          connect: {
+            id: updateCustomerDto.roleId
           }
         }
       }

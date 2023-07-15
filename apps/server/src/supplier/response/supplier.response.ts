@@ -4,7 +4,7 @@ export class SupplierResponse {
   name: string;
   email: string;
   phoneNumber: string;
-  roleIds: Array<string>;
+  roleId: number;
   shopId: number;
   isActive: boolean;
 
@@ -14,7 +14,7 @@ export class SupplierResponse {
     response.email = entity.email;
     response.phoneNumber = entity.phoneNumber;
     response.shopId = entity.shopId;
-    response.roleIds = JSON.parse(<string>entity.roleIds);
+    response.roleId = entity.roleId;
     response.isActive = entity.isActive;
     return response;
   }

@@ -4,6 +4,6 @@ export interface BaseUserDto {
   phoneNumber: string;
   password: string;
   shopId: number;
-  roleIds: Array<number>;
+  roleId: number;
   isActive: boolean;
 }

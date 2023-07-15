@@ -8,8 +8,8 @@ export class SupplierValidation {
       return 'supplier.validation.email-required';
     if(!dto.phoneNumber)
       return 'supplier.validation.phoneNumber-required';
-    if(!dto.roleIds || dto.roleIds?.length === 0)
-      return 'supplier.validation.roleIds-required';
+    if(!dto.roleId)
+      return 'supplier.validation.roleId-required';
     if(!dto.shopId)
       return 'supplier.validation.shopId-required';
   }
@@ -21,8 +21,8 @@ export class SupplierValidation {
       return 'supplier.validation.email-required';
     if(!dto.phoneNumber)
       return 'supplier.validation.phoneNumber-required';
-    if(!dto.roleIds || dto.roleIds?.length === 0)
-      return 'supplier.validation.roleIds-required';
+    if(!dto.roleId)
+      return 'supplier.validation.roleId-required';
     if(!dto.shopId)
       return 'supplier.validation.shopId-required';
   }

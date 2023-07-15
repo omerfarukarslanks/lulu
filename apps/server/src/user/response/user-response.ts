@@ -6,7 +6,7 @@ export class UserResponse {
   email: string
   phoneNumber: string;
   shopId: number;
-  roles: Array<string>;
+  roleId: number;
   permissions: Array<string>;
   isActive: boolean;
   static fromUserEntity(entity: User) {
@@ -16,7 +16,7 @@ export class UserResponse {
     response.email = entity.email;
     response.phoneNumber = entity.phoneNumber;
     response.shopId = entity.shopId;
-    response.roles = JSON.parse(<string>entity.roleIds);
+    response.roleId = entity.roleId;
     response.isActive = entity.isActive
     return response;
   }

@@ -12,8 +12,8 @@ export class UserValidation {
       return 'user.validation.password-required';
     if(!user.shopId)
       return 'user.validation.shopId-required';
-    if(!user.roleIds || user.roleIds.length === 0) {
-      return 'user.validation.roleIds-required'
+    if(!user.roleId) {
+      return 'user.validation.roleId-required'
     }
   }
 
@@ -28,8 +28,8 @@ export class UserValidation {
       return 'user.validation.password-required';
     if(!user.shopId)
       return 'user.validation.shopId-required';
-    if(!user.roleIds || user.roleIds.length === 0) {
-      return 'user.validation.roleIds-required'
+    if(!user.roleId) {
+      return 'user.validation.roleId-required'
     }
   }
 }

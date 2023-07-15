@@ -6,6 +6,6 @@ export interface BaseCustomerDto {
   phoneNumber: string;
   type: CustomerType;
   shopId: number;
-  roleIds: Array<number>;
+  roleId: number;
   isActive: boolean;
 }

@@ -6,7 +6,7 @@ export class CustomerResponse{
   phoneNumber: string;
   type: CustomerType;
   shopId: number;
-  roleIds: Array<number>;
+  roleId: number;
   isActive: boolean;
 
   static fromDtoToEntity(entity: Customer) {
@@ -16,7 +16,7 @@ export class CustomerResponse{
     response.phoneNumber = entity.phoneNumber;
     response.type = entity.type;
     response.isActive  =entity.isActive;
-    response.roleIds = JSON.parse(<string>entity.roleIds);
+    response.roleId = entity.roleId;
     response.shopId = entity.shopId;
     return response;
   }

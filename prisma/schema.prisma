@@ -39,15 +39,16 @@ model Shop {
 }
 
 model User {
-  id          Int      @id @default(autoincrement()) //uuid
+  id          Int      @id @default(autoincrement()) // uuid
   email       String   @unique
   name        String
   phoneNumber String
   password    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  roleIds     Json
   isActive    Boolean
+  roleId      Int
+  role        Role     @relation(fields: [roleId], references: [id])
   shopId      Int
   shop        Shop     @relation(fields: [shopId], references: [id])
 }
@@ -60,8 +61,9 @@ model Customer {
   updatedAt   DateTime      @updatedAt
   phoneNumber String
   type        CustomerType?
-  roleIds     Json
   isActive    Boolean
+  roleId      Int
+  role        Role     @relation(fields: [roleId], references: [id])
   shopId      Int
   shop        Shop          @relation(fields: [shopId], references: [id])
 }
@@ -73,8 +75,9 @@ model Supplier {
   updatedAt   DateTime @updatedAt
   name        String
   phoneNumber String
-  roleIds     Json
   isActive    Boolean
+  roleId      Int
+  role        Role     @relation(fields: [roleId], references: [id])
   shopId      Int
   shop        Shop     @relation(fields: [shopId], references: [id])
 }
@@ -86,6 +89,9 @@ model Role {
   name        String   @unique
   permissions Json
   isActive    Boolean
+  user        User[]
+  customer    Customer[]
+  supplier    Supplier[]
 }
 
 enum CompanyType {

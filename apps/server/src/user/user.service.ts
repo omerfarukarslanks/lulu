@@ -4,11 +4,12 @@ import {BcryptService, PrismaService} from "@lulu/service";
 import {CreateUserDto, UpdateUserDto} from "@lulu/model";
 import {UserValidation} from "./validation/user-validation";
 import {ShopService} from "../shop/shop.service";
+import {RoleService} from "../role/role.service";
 
 @Injectable()
 export class UserService {
 
-  constructor(private readonly prismaService: PrismaService, private bcryptService: BcryptService, private shopService: ShopService) {
+  constructor(private readonly prismaService: PrismaService, private bcryptService: BcryptService, private shopService: ShopService, private roleService: RoleService) {
   }
 
   async create(createUserDto: CreateUserDto) {
@@ -16,13 +17,17 @@ export class UserService {
     if (invalidMessage)
       throw new BadRequestException(null, invalidMessage);
 
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(createUserDto.email);
+    if (emailAvailableCount > 0)
+      throw new BadRequestException(null, 'user.error-message.duplicate-email');
+
     const findShopCount = await this.shopService.findShopCountById(createUserDto.shopId);
     if (findShopCount === 0)
       throw new NotFoundException(null, 'user.error-message.not-found-shop');
 
-    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(createUserDto.email);
-    if (emailAvailableCount > 0)
-      throw new BadRequestException(null, 'user.error-message.duplicate-email');
+    const findRoleCount = await this.roleService.findByRoleCountById(createUserDto.roleId);
+    if(findRoleCount === 0)
+      throw new NotFoundException(null, 'user.error-message.not-found-role');
 
     const createUser = await this.prismaService.user.create({
       data: {
@@ -30,11 +35,15 @@ export class UserService {
         email: createUserDto.email,
         password: await this.bcryptService.hash(createUserDto.password),
         phoneNumber: createUserDto.phoneNumber,
-        roleIds: JSON.stringify(createUserDto.roleIds),
         isActive: createUserDto.isActive,
         shop: {
           connect: {
             id: createUserDto.shopId
+          }
+        },
+        role: {
+          connect: {
+            id: createUserDto.roleId
           }
         }
       }
@@ -56,22 +65,25 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const invalidUser = UserValidation.updateUserDtoValidation(updateUserDto);
-    if (invalidUser)
-      throw new BadRequestException(null, invalidUser);
-
     const findUserCount = await this.findUserCountById(id);
     if (findUserCount === 0)
       throw new NotFoundException(null, 'user.error-message.not-found-user')
 
+    const invalidUser = UserValidation.updateUserDtoValidation(updateUserDto);
+    if (invalidUser)
+      throw new BadRequestException(null, invalidUser);
+
+    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(updateUserDto.email, id);
+    if (emailAvailableCount > 0)
+      throw new BadRequestException(null, 'user.error-message.duplicate-email');
 
     const findShopCount = await this.shopService.findShopCountById(updateUserDto.shopId);
     if (findShopCount === 0)
       throw new NotFoundException(null, 'user.error-message.not-found-shop');
 
-    const emailAvailableCount = await this.checkEmailUniquenessCountByEmailOrById(updateUserDto.email, id);
-    if (emailAvailableCount > 0)
-      throw new BadRequestException(null, 'user.error-message.duplicate-email');
+    const findRoleCount = await this.roleService.findByRoleCountById(updateUserDto.roleId);
+    if(findRoleCount === 0)
+      throw new NotFoundException(null, 'user.error-message.not-found-role');
 
     const user = await this.prismaService.user.update({
       where: {id},
@@ -79,10 +91,14 @@ export class UserService {
         name: updateUserDto.name,
         email: updateUserDto.email,
         phoneNumber: updateUserDto.phoneNumber,
-        roleIds: JSON.stringify(updateUserDto.roleIds),
         password: await this.bcryptService.hash(updateUserDto.password),
         isActive: updateUserDto.isActive,
-        shop: {connect: {id: updateUserDto.shopId}}
+        shop: {connect: {id: updateUserDto.shopId}},
+        role: {
+          connect: {
+            id: updateUserDto.roleId
+          }
+        }
       }
     })
     return UserResponse.fromUserEntity(user);

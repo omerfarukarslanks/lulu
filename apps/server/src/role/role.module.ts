@@ -6,6 +6,7 @@ import {PrismaService} from "@lulu/service";
 @Module({
   controllers: [RoleController],
   providers: [RoleService, PrismaService],
+  exports: [RoleService]
 })
 export class RoleModule {
 }

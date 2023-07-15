@@ -32,7 +32,7 @@ export class AuthService {
 
   async login(user: LoginDto) {
     const findUser = await this.validate(user.email, user.password)
-    const payload = {id: findUser?.id, email: findUser?.email, companyId: findUser?.shopId};
+    const payload = {id: findUser?.id, email: findUser?.email, companyId: findUser?.shopId, roleId: findUser?.roleId};
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

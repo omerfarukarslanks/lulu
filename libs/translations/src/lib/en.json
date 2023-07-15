@@ -31,12 +31,13 @@
       "phoneNumber-required": "Phone Number required",
       "password-required": "Password required",
       "shopId-required": "Shop required",
-      "roleIds-required": "Role required"
+      "roleId-required": "Role required"
     },
     "error-message": {
       "duplicate-email": "Email is available",
       "not-found-user": "User is not found",
-      "not-found-shop": "Shop is not found"
+      "not-found-shop": "Shop is not found",
+      "not-found-role": "Role is not found"
     }
   },
   "role": {
@@ -57,12 +58,13 @@
       "phoneNumber-required": "Phone Number required",
       "type-required": "Type required",
       "shopId-required": "Shop required",
-      "roleIds-required": "Role required"
+      "roleId-required": "Role required"
     },
     "error-message": {
       "duplicate-email": "Email is available",
       "not-found-customer": "User is not found",
-      "not-found-shop": "Shop is not found"
+      "not-found-shop": "Shop is not found",
+      "not-found-role": "Role is not found"
     }
   },
   "auth": {
@@ -78,12 +80,13 @@
       "email-required": "Email required",
       "phoneNumber-required": "Phone Number required",
       "shopId-required": "Shop required",
-      "roleIds-required": "Role required"
+      "roleId-required": "Role required"
     },
     "error-message": {
       "duplicate-email": "Email is available",
       "not-found-supplier": "Supplier is not found",
-      "not-found-shop": "Shop is not found"
+      "not-found-shop": "Shop is not found",
+      "not-found-role": "Role is not found"
     }
   }
 }

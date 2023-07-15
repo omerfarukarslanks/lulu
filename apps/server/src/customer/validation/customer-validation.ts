@@ -12,8 +12,8 @@ export class CustomerValidation {
       return 'customer.validation.type-required';
     if(!customer.shopId)
       return 'customer.validation.shopId-required';
-    if(!customer.roleIds)
-      return 'customer.validation.roleIds-required';
+    if(!customer.roleId)
+      return 'customer.validation.roleId-required';
   }
 
   static updateCustomerDtoValidation(customer: UpdateCustomerDto) {
@@ -27,7 +27,7 @@ export class CustomerValidation {
       return 'customer.validation.type-required';
     if(!customer.shopId)
       return 'customer.validation.shopId-required';
-    if(!customer.roleIds)
-      return 'customer.validation.roleIds-required';
+    if(!customer.roleId)
+      return 'customer.validation.roleId-required';
   }
 }
