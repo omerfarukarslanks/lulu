@@ -3,12 +3,14 @@ import {UserService} from "../user/user.service";
 import {JwtService} from "@nestjs/jwt";
 import {LoginDto} from "./dto/login.dto";
 import {BcryptService} from "@lulu/service";
+import {RoleService} from "../role/role.service";
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UserService,
               private jwtService: JwtService,
-              private bcryptService: BcryptService) {
+              private bcryptService: BcryptService,
+              private roleService: RoleService) {
   }
 
   async validate(email: string, password: string) {
@@ -31,8 +33,9 @@ export class AuthService {
   }
 
   async login(user: LoginDto) {
-    const findUser = await this.validate(user.email, user.password)
-    const payload = {id: findUser?.id, email: findUser?.email, companyId: findUser?.shopId, roleId: findUser?.roleId};
+    const validUser = await this.validate(user.email, user.password)
+    const findRole = await this.roleService.findRoleById(validUser.roleId);
+    const payload = {id: validUser?.id, email: validUser?.email, companyId: validUser?.shopId, role: findRole.name};
     return {
       access_token: await this.jwtService.signAsync(payload),
     };

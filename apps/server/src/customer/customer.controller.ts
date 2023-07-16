@@ -8,25 +8,25 @@ import {HasRole} from "@lulu/decorator";
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
-  @HasRole(RoleEnum.ADMIN)
+  @HasRole([RoleEnum.ADMIN])
   @UseGuards(AuthGuard,RolesGuard)
   @Post()
   create(@Body() createCustomerDto: CreateCustomerDto) {
     return this.customerService.create(createCustomerDto);
   }
-  @HasRole(RoleEnum.ADMIN)
+  @HasRole([RoleEnum.ADMIN])
   @UseGuards(AuthGuard,RolesGuard)
   @Get()
   findAll() {
     return this.customerService.findAll();
   }
-  @HasRole(RoleEnum.ADMIN)
+  @HasRole([RoleEnum.ADMIN])
   @UseGuards(AuthGuard,RolesGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.customerService.findOne(+id);
   }
-  @HasRole(RoleEnum.ADMIN)
+  @HasRole([RoleEnum.ADMIN])
   @UseGuards(AuthGuard,RolesGuard)
   @Put(':id')
   update(
@@ -35,7 +35,7 @@ export class CustomerController {
   ) {
     return this.customerService.update(+id, updateCustomerDto);
   }
-  @HasRole(RoleEnum.ADMIN)
+  @HasRole([RoleEnum.ADMIN])
   @UseGuards(AuthGuard,RolesGuard)
   @Put('activation/:id/:isActive')
   customerActivation(@Param('id', ParseIntPipe) id: number,
