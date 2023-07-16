@@ -1,16 +1,17 @@
-import {Customer, CustomerType} from "@prisma/client";
+import {Customer} from "@prisma/client";
+import {ICustomerResponseModel} from "@lulu/model";
 
 export class CustomerResponse{
-  name: string;
-  email: string;
-  phoneNumber: string;
-  type: CustomerType;
-  shopId: number;
-  roleId: number;
-  isActive: boolean;
-
-  static fromDtoToEntity(entity: Customer) {
-    const response = new CustomerResponse();
+  static fromEntityToResponse(entity: Customer) {
+    const response: ICustomerResponseModel = {
+      email: "",
+      isActive: false,
+      name: "",
+      phoneNumber: "",
+      roleId: 0,
+      shopId: 0,
+      type: undefined
+    }
     response.name = entity.name;
     response.email = entity.email;
     response.phoneNumber = entity.phoneNumber;

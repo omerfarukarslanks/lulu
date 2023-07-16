@@ -1,14 +1,10 @@
 import {Shop} from "@prisma/client";
+import {IShopResponseModel} from "@lulu/model";
 
 export class ShopResponse {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  companyId?: number;
-  isActive: boolean;
 
-  static fromToEntity(entity: Shop) {
-    const response = new ShopResponse();
+  static fromEntityToResponse(entity: Shop) {
+    const response: IShopResponseModel = {companyId: null, email: "", isActive: false, name: "", phoneNumber: ""}
     response.email = entity.email;
     response.name = entity.name;
     response.isActive = entity.isActive;

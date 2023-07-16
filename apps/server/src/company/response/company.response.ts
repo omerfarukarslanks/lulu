@@ -1,21 +1,23 @@
-import {Company, CompanyType} from "@prisma/client";
+import {Company} from "@prisma/client";
+import {ICompanyResponseModel} from "@lulu/model";
 
 export class CompanyResponse {
-  id: number;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  type: CompanyType;
-  isActive: boolean;
 
-  static fromCompanyToEntity(company: Company) {
-    const companyResponse = new CompanyResponse();
-    companyResponse.name = company.name;
-    companyResponse.id = company.id;
-    companyResponse.email = company.email;
-    companyResponse.phoneNumber = company.phoneNumber;
-    companyResponse.type = company.type;
-    companyResponse.isActive = company.isActive
+  static fromEntityToResponse(entity: Company) {
+    const companyResponse: ICompanyResponseModel = {
+      email: "",
+      id: 0,
+      isActive: false,
+      name: "",
+      phoneNumber: "",
+      type: undefined
+    }
+    companyResponse.name = entity.name;
+    companyResponse.id = entity.id;
+    companyResponse.email = entity.email;
+    companyResponse.phoneNumber = entity.phoneNumber;
+    companyResponse.type = entity.type;
+    companyResponse.isActive = entity.isActive
     return companyResponse;
   }
 }

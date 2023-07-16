@@ -37,7 +37,7 @@ export class ShopService {
         }
       },
     })
-    return ShopResponse.fromToEntity(shop);
+    return ShopResponse.fromEntityToResponse(shop);
   }
 
   async findAll() {
@@ -49,7 +49,7 @@ export class ShopService {
     if (!shop)
       throw new NotFoundException(null, 'shop.error-message.not-found-shop')
 
-    return ShopResponse.fromToEntity(shop);
+    return ShopResponse.fromEntityToResponse(shop);
   }
 
   async update(id: number, updateShopDto: UpdateShopDto) {
@@ -82,7 +82,7 @@ export class ShopService {
         }
       }
     })
-    return ShopResponse.fromToEntity(shop);
+    return ShopResponse.fromEntityToResponse(shop);
   }
 
   async shopActivation(id: number, isActive: boolean) {
@@ -91,7 +91,7 @@ export class ShopService {
       throw new NotFoundException(null, 'shop.error-message.not-found-shop')
 
     const shop = await this.prismaService.shop.update({where: {id}, data: {isActive}})
-    return ShopResponse.fromToEntity(shop);
+    return ShopResponse.fromEntityToResponse(shop);
   }
 
 

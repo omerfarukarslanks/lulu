@@ -1,16 +1,18 @@
 import {User} from "@prisma/client";
+import {IUserResponseModel} from "@lulu/model";
 
 export class UserResponse {
-  id: number;
-  name: string;
-  email: string
-  phoneNumber: string;
-  shopId: number;
-  roleId: number;
-  permissions: Array<string>;
-  isActive: boolean;
-  static fromUserEntity(entity: User) {
-    const response = new UserResponse();
+  static fromEntityToResponse(entity: User) {
+    const response: IUserResponseModel = {
+      email: "",
+      id: null,
+      isActive: false,
+      name: "",
+      permissions: undefined,
+      phoneNumber: "",
+      roleId: null,
+      shopId: null
+    }
     response.id = entity.id;
     response.name = entity.name
     response.email = entity.email;

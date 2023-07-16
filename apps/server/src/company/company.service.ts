@@ -27,7 +27,7 @@ export class CompanyService {
         type: createCompanyDto.type
       }
     })
-    return CompanyResponse.fromCompanyToEntity(company);
+    return CompanyResponse.fromEntityToResponse(company);
   }
 
   async findAll() {
@@ -39,7 +39,7 @@ export class CompanyService {
     if (!company)
       throw new NotFoundException('', 'company.error-message.not-found-company')
 
-    return CompanyResponse.fromCompanyToEntity(company);
+    return CompanyResponse.fromEntityToResponse(company);
   }
 
   async update(id: number, updateCompanyDto: UpdateCompanyDto) {
@@ -68,7 +68,7 @@ export class CompanyService {
         isActive: updateCompanyDto.isActive
       }
     })
-    return CompanyResponse.fromCompanyToEntity(company);
+    return CompanyResponse.fromEntityToResponse(company);
   }
 
   async companyActivation(id: number, isActive: boolean) {
@@ -77,7 +77,7 @@ export class CompanyService {
       throw new NotFoundException('', 'company.error-message.not-found-company')
 
     const company = await this.prismaService.company.update({where: {id}, data: {isActive}})
-    return CompanyResponse.fromCompanyToEntity(company);
+    return CompanyResponse.fromEntityToResponse(company);
   }
 
   async checkEmailUniquenessCountByEmailOrById(email: string, id?: number) {

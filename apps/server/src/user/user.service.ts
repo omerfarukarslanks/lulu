@@ -49,7 +49,7 @@ export class UserService {
       }
     });
 
-    return UserResponse.fromUserEntity(createUser);
+    return UserResponse.fromEntityToResponse(createUser);
   }
 
   async findAll() {
@@ -61,7 +61,7 @@ export class UserService {
     if (!user)
       throw new NotFoundException(null, 'user.error-message.not-found-user')
 
-    return UserResponse.fromUserEntity(user);
+    return UserResponse.fromEntityToResponse(user);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -101,7 +101,7 @@ export class UserService {
         }
       }
     })
-    return UserResponse.fromUserEntity(user);
+    return UserResponse.fromEntityToResponse(user);
   }
 
   async userActivation(id: number, isActive: boolean) {
@@ -114,7 +114,7 @@ export class UserService {
       data: {isActive}
     })
 
-    return UserResponse.fromUserEntity(user);
+    return UserResponse.fromEntityToResponse(user);
   }
 
   async checkEmailUniquenessCountByEmailOrById(email: string, id?: number) {

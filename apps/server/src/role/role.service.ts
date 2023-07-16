@@ -29,7 +29,7 @@ export class RoleService {
       }
     });
 
-    return RoleResponse.fromRoleEntity(role);
+    return RoleResponse.fromEntityToResponse(role);
   }
 
   async findAll() {
@@ -40,7 +40,7 @@ export class RoleService {
     const role = await this.findRoleById(id);
     if (!role)
       throw new NotFoundException('', 'role.error-message.not-found-role')
-    return RoleResponse.fromRoleEntity(role)
+    return RoleResponse.fromEntityToResponse(role)
   }
 
   async update(id: number, updateRoleDto: UpdateRoleDto) {
@@ -66,7 +66,7 @@ export class RoleService {
         isActive: updateRoleDto.isActive
       }
     })
-    return RoleResponse.fromRoleEntity(role);
+    return RoleResponse.fromEntityToResponse(role);
   }
 
   async roleActivation(id: number, isActive: boolean) {
@@ -78,7 +78,7 @@ export class RoleService {
       where: {id},
       data: {isActive}
     })
-    return RoleResponse.fromRoleEntity(role);
+    return RoleResponse.fromEntityToResponse(role);
   }
 
   checkNameUniquenessCountByNameOrById(name: string, id?: number) {

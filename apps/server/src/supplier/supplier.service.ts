@@ -47,7 +47,7 @@ export class SupplierService {
         }
       }
     });
-    return SupplierResponse.fromDtoToEntity(supplier);
+    return SupplierResponse.fromEntityToResponse(supplier);
   }
 
   async findAll() {
@@ -59,7 +59,7 @@ export class SupplierService {
     if (!findSupplier)
       throw new NotFoundException(null, 'supplier.error-message.not-found-supplier');
 
-    return SupplierResponse.fromDtoToEntity(findSupplier);
+    return SupplierResponse.fromEntityToResponse(findSupplier);
   }
 
   async update(id: number, updateSupplierDto: UpdateSupplierDto) {
@@ -102,7 +102,7 @@ export class SupplierService {
         }
       }
     });
-    return SupplierResponse.fromDtoToEntity(supplier);
+    return SupplierResponse.fromEntityToResponse(supplier);
   }
 
   async supplierActivation(id: number, isActive: boolean) {
@@ -111,7 +111,7 @@ export class SupplierService {
       throw new NotFoundException(null, 'supplier.error-message.not-found-supplier');
 
     const supplier = await this.prismaService.supplier.update({where: {id}, data: {isActive}});
-    return SupplierResponse.fromDtoToEntity(supplier);
+    return SupplierResponse.fromEntityToResponse(supplier);
   }
 
   async checkEmailUniquenessCountByEmailOrById(email: string, id?: number) {

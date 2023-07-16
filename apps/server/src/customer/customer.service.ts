@@ -47,7 +47,7 @@ export class CustomerService {
         }
       }
     });
-    return CustomerResponse.fromDtoToEntity(customer);
+    return CustomerResponse.fromEntityToResponse(customer);
   }
 
   findAll() {
@@ -59,7 +59,7 @@ export class CustomerService {
     if (!customer)
       throw new NotFoundException(null, 'customer.error-message.not-found-customer');
 
-    return CustomerResponse.fromDtoToEntity(customer);
+    return CustomerResponse.fromEntityToResponse(customer);
   }
 
   async update(id: number, updateCustomerDto: UpdateCustomerDto) {
@@ -103,7 +103,7 @@ export class CustomerService {
         }
       }
     })
-    return CustomerResponse.fromDtoToEntity(customer);
+    return CustomerResponse.fromEntityToResponse(customer);
   }
 
   async customerActivation(id: number, isActive: boolean) {
@@ -112,7 +112,7 @@ export class CustomerService {
       throw new NotFoundException(null, 'customer.error-message.not-found-customer');
 
     const customer = await this.prismaService.customer.update({where: {id}, data: {isActive}})
-    return CustomerResponse.fromDtoToEntity(customer);
+    return CustomerResponse.fromEntityToResponse(customer);
   }
 
 

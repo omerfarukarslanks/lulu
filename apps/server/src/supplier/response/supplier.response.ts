@@ -1,15 +1,17 @@
 import {Supplier} from "@prisma/client";
+import {ISupplierResponseModel} from "@lulu/model";
 
 export class SupplierResponse {
-  name: string;
-  email: string;
-  phoneNumber: string;
-  roleId: number;
-  shopId: number;
-  isActive: boolean;
 
-  static fromDtoToEntity(entity: Supplier) {
-    const response = new SupplierResponse();
+  static fromEntityToResponse(entity: Supplier) {
+    const response: ISupplierResponseModel = {
+      email: "",
+      isActive: false,
+      name: "",
+      phoneNumber: "",
+      roleId: null,
+      shopId: null
+    }
     response.name = entity.name;
     response.email = entity.email;
     response.phoneNumber = entity.phoneNumber;
