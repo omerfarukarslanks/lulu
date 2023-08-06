@@ -1,9 +1,9 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
-import {PrismaService} from "@lulu/service";
 import {ShopResponse} from "./response/shop.response";
 import {CreateShopDto, UpdateShopDto} from "@lulu/model";
 import {ShopValidation} from "./validation/shop-validation";
 import {CompanyService} from "../company/company.service";
+import {PrismaService} from "@lulu/prisma";
 
 @Injectable()
 export class ShopService {

@@ -4,8 +4,9 @@ import { CustomerController } from './customer.controller';
 import {ShopService} from "../shop/shop.service";
 import {UserService} from "../user/user.service";
 import {CompanyService} from "../company/company.service";
-import {BcryptService, PrismaService} from "@lulu/service";
+import {BcryptService} from "@lulu/service";
 import {RoleService} from "../role/role.service";
+import {PrismaService} from "@lulu/prisma";
 
 @Module({
   controllers: [CustomerController],

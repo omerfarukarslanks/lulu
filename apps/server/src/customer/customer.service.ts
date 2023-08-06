@@ -1,10 +1,10 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {CreateCustomerDto, UpdateCustomerDto} from "@lulu/model";
-import {PrismaService} from "@lulu/service";
 import {ShopService} from "../shop/shop.service";
 import {CustomerValidation} from "./validation/customer-validation";
 import {CustomerResponse} from "./response/customer.response";
 import {RoleService} from "../role/role.service";
+import {PrismaService} from "@lulu/prisma";
 
 @Injectable()
 export class CustomerService {

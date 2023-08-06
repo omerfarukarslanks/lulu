@@ -1,9 +1,8 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
-import {PrismaService} from "@lulu/service";
 import {RoleResponse} from "./response/role.response";
 import {RoleValidation} from "./validation/role-validation";
 import {CreateRoleDto, UpdateRoleDto} from "@lulu/model";
-import {Role} from "./entities/role.entity";
+import {PrismaService} from "@lulu/prisma";
 
 @Injectable()
 export class RoleService {

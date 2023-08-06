@@ -4,11 +4,12 @@ import { AuthController } from './auth.controller';
 import {JwtModule} from "@nestjs/jwt";
 import {PassportModule} from "@nestjs/passport";
 import {UserService} from "../user/user.service";
-import {BcryptService, PrismaService} from "@lulu/service";
+import {BcryptService} from "@lulu/service";
 import {jwtConstants} from "@lulu/model";
 import {CompanyService} from "../company/company.service";
 import {ShopService} from "../shop/shop.service";
 import {RoleService} from "../role/role.service";
+import {PrismaService} from "@lulu/prisma";
 
 @Module({
   controllers: [AuthController],

@@ -1,10 +1,11 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {UserResponse} from "./response/user-response";
-import {BcryptService, PrismaService} from "@lulu/service";
+import {BcryptService} from "@lulu/service";
 import {CreateUserDto, UpdateUserDto} from "@lulu/model";
 import {UserValidation} from "./validation/user-validation";
 import {ShopService} from "../shop/shop.service";
 import {RoleService} from "../role/role.service";
+import {PrismaService} from "@lulu/prisma";
 
 @Injectable()
 export class UserService {

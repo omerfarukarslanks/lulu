@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ShopService } from './shop.service';
 import { ShopController } from './shop.controller';
-import {PrismaService} from "@lulu/service";
 import {CompanyService} from "../company/company.service";
+import {PrismaService} from "@lulu/prisma";
 
 @Module({
   controllers: [ShopController],
